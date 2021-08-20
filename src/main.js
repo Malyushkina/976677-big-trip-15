@@ -4,20 +4,15 @@ import { siteMenu } from './view/site-menu.js';
 import { filters } from './view/filters.js';
 import { routeAndCost } from './view/route-and-cost';
 import { tripEventsList } from './view/events-list.js';
-// import { newPointForm } from './view/new-point.js';
 import { editPointForm } from './view/edit-point.js';
-import { point } from './view/point.js';
 import { generateTask } from './mock/task';
+import { sortDate } from './utils.js';
+import { TASK_COUNT } from './const.js';
+import { point } from './view/point';
 
-const TASK_COUNT = 10;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
-const sortDate = (a, b) => {
-  const date1 = new Date(a.date);
-  const date2 = new Date(b.date);
-  return date1 - date2;
-};
-
 tasks.sort(sortDate);
+
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -39,7 +34,7 @@ render(siteTripFilters, filters(), 'beforeend');
 render(siteTripMain, routeAndCost(), 'afterbegin');
 
 const siteTripList = siteTripEvents.querySelector('.trip-events__list');
-render(siteTripList, editPointForm(), 'afterbegin');
-for (let i = 0; i < TASK_COUNT; i++) {
+render(siteTripList, editPointForm(tasks[0]), 'afterbegin');
+for (let i = 1; i < TASK_COUNT; i++) {
   render(siteTripList, point(tasks[i]), 'beforeend');
 }

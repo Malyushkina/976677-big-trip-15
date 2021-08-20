@@ -1,19 +1,20 @@
 import dayjs from 'dayjs';
-
+import { upperCase } from '../utils';
 import { eventOffer } from './event-offer';
 export const point = (task) => {
-  const { date, description, begDate, endDate, duration, points, amount } = task;
-  const pointDate = date !== null ? dayjs(date).format('MMM D') : '';
+  const { place, begDate, endDate, duration, points, basePrice } = task;
+  const pointDate = begDate !== null ? dayjs(begDate).format('MMM D') : '';
   const beginning = begDate !== null ? dayjs(begDate).format('HH:mm') : '';
   const ending = endDate !== null ? dayjs(endDate).format('HH:mm') : '';
-  const iconPath = `img/icons/${points}.png`;
+  const iconPath = `img/icons/${points.type}.png`;
+
   return `<li class='trip-events__item'>
   <div class='event'>
     <time class='event__date' datetime='2019-03-18'>${pointDate}</time>
     <div class='event__type'>
       <img class='event__type-icon' width='42' height='42' src=${iconPath} alt='Event type icon'>
     </div>
-    <h3 class='event__title'>${points} ${description.name}</h3>
+    <h3 class='event__title'>${upperCase(points.type)} ${place.name}</h3>
     <div class='event__schedule'>
       <p class='event__time'>
         <time class='event__start-time' datetime=${beginning}>${beginning}</time>
@@ -23,7 +24,7 @@ export const point = (task) => {
       <p class='event__duration'>${duration}</p>
     </div>
     <p class='event__price'>
-      &euro;&nbsp;<span class='event__price-value'>${amount}</span>
+      &euro;&nbsp;<span class='event__price-value'>${basePrice}</span>
     </p>
     <h4 class='visually-hidden'>Offers:</h4>
     <ul class='event__selected-offers'>

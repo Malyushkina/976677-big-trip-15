@@ -98,6 +98,31 @@
 
 /***/ }),
 
+/***/ "./src/const.js":
+/*!**********************!*\
+  !*** ./src/const.js ***!
+  \**********************/
+/*! exports provided: POINTS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "POINTS", function() { return POINTS; });
+const POINTS = [
+  'Taxi',
+  'Bus',
+  'Train',
+  'Ship',
+  'Drive',
+  'Flight',
+  'Check-in',
+  'Sightseeing',
+  'Restaurant',
+];
+
+
+/***/ }),
+
 /***/ "./src/main.js":
 /*!*********************!*\
   !*** ./src/main.js ***!
@@ -112,23 +137,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _view_filters_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view/filters.js */ "./src/view/filters.js");
 /* harmony import */ var _view_route_and_cost__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view/route-and-cost */ "./src/view/route-and-cost.js");
 /* harmony import */ var _view_events_list_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/events-list.js */ "./src/view/events-list.js");
-/* harmony import */ var _view_edit_point_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/edit-point.js */ "./src/view/edit-point.js");
-/* harmony import */ var _view_point_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/point.js */ "./src/view/point.js");
-/* harmony import */ var _mock_task__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./mock/task */ "./src/mock/task.js");
+/* harmony import */ var _view_new_point_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/new-point.js */ "./src/view/new-point.js");
+/* harmony import */ var _view_edit_point_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/edit-point.js */ "./src/view/edit-point.js");
+/* harmony import */ var _view_point_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/point.js */ "./src/view/point.js");
+/* harmony import */ var _mock_task__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./mock/task */ "./src/mock/task.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 /* eslint-disable quotes */
 
 
 
 
 
-// import { newPointForm } from './view/new-point.js';
+
+
 
 
 
 
 const TASK_COUNT = 10;
-const tasks = new Array(TASK_COUNT).fill().map(_mock_task__WEBPACK_IMPORTED_MODULE_7__["generateTask"]);
-tasks.sort((a, b) => a.date < b.date);
+const tasks = new Array(TASK_COUNT).fill().map(_mock_task__WEBPACK_IMPORTED_MODULE_8__["generateTask"]);
+
+tasks.sort(_utils_js__WEBPACK_IMPORTED_MODULE_9__["sortDate"]);
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -150,10 +179,11 @@ render(siteTripFilters, Object(_view_filters_js__WEBPACK_IMPORTED_MODULE_2__["fi
 render(siteTripMain, Object(_view_route_and_cost__WEBPACK_IMPORTED_MODULE_3__["routeAndCost"])(), 'afterbegin');
 
 const siteTripList = siteTripEvents.querySelector('.trip-events__list');
-render(siteTripList, Object(_view_edit_point_js__WEBPACK_IMPORTED_MODULE_5__["editPointForm"])(), 'afterbegin');
-for (let i = 0; i < TASK_COUNT; i++) {
-  render(siteTripList, Object(_view_point_js__WEBPACK_IMPORTED_MODULE_6__["point"])(tasks[i]), 'beforeend');
+render(siteTripList, Object(_view_edit_point_js__WEBPACK_IMPORTED_MODULE_6__["editPointForm"])(tasks[0]), 'afterbegin');
+for (let i = 1; i < TASK_COUNT; i++) {
+  render(siteTripList, Object(_view_point_js__WEBPACK_IMPORTED_MODULE_7__["point"])(tasks[i]), 'beforeend');
 }
+const newEvent = () => render(siteTripList, Object(_view_new_point_js__WEBPACK_IMPORTED_MODULE_5__["newPointForm"])(), 'afterbegin');
 
 
 /***/ }),
@@ -170,54 +200,277 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateTask", function() { return generateTask; });
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
+
+
+const generatePlace = () => {
+  const r = Math.random();
+  const picturePath = `http://picsum.photos/300/200?r=${r}`;
+  const destination = [
+    {
+      name: 'Amsterdam',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
+      pictures: [
+        {
+          src: picturePath,
+          description: 'Amsterdam parliament building',
+        },
+      ],
+    },
+    {
+      name: 'Chamonix',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
+      pictures: [
+        {
+          src: picturePath,
+          description: 'Chamonix parliament building',
+        },
+      ],
+    },
+    {
+      name: 'Geneva',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
+      pictures: [
+        {
+          src: picturePath,
+          description: 'Geneva parliament building',
+        },
+      ],
+    },
+  ];
+  const randomIndex = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, destination.length - 1);
+  return destination[randomIndex];
+};
+
+const generateDate = (maxDaysGap = 7, param = 'day') => {
+  const daysGap = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(-maxDaysGap, maxDaysGap);
+  return dayjs__WEBPACK_IMPORTED_MODULE_0___default()().add(daysGap, param).toDate();
+};
+const generatePoint = () => {
+  const pointsOffer = [
+    {
+      type: 'taxi',
+      offers: [
+        {
+          name: 'business',
+          title: 'Upgrade to a business class',
+          price: 120,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'radio',
+          title: 'Choose the radio station',
+          price: 60,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'uber',
+          title: 'Order Uber',
+          price: 20,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'bus',
+      offers: [
+        {
+          name: 'business',
+          title: 'Upgrade to a business class',
+          price: 120,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'radio',
+          title: 'Choose the radio station',
+          price: 60,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'train',
+      offers: [
+        {
+          name: 'business',
+          title: 'Upgrade to a business class',
+          price: 120,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'radio',
+          title: 'Choose the radio station',
+          price: 60,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'ship',
+      offers: [
+        {
+          name: 'business',
+          title: 'Upgrade to a business class',
+          price: 120,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'radio',
+          title: 'Choose the radio station',
+          price: 60,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'drive',
+      offers: [
+        {
+          name: 'business',
+          title: 'Upgrade to a business class',
+          price: 120,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+
+        {
+          name: 'rent',
+          title: 'Rent a car',
+          price: 200,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'flight',
+      offers: [
+        {
+          name: 'luggage',
+          title: 'Add luggage',
+          price: 30,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'comfort',
+          title: 'Switch to comfort',
+          price: 100,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        { name: 'meal', title: 'Add meal', price: 15, isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)) },
+        {
+          name: 'seats',
+          title: 'Choose seats',
+          price: 5,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'train',
+          title: 'Travel by train',
+          price: 40,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'check-in',
+      offers: [
+        {
+          name: 'breakfast',
+          title: 'Add breakfast',
+          price: 120,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'sightseeing',
+      offers: [
+        {
+          name: 'tickets',
+          title: 'Book tickets',
+          price: 40,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+        {
+          name: 'lunch',
+          title: 'Lunch in city ',
+          price: 30,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+    {
+      type: 'restaurant',
+      offers: [
+        {
+          name: 'lunch',
+          title: 'Lunch in city ',
+          price: 30,
+          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+        },
+      ],
+    },
+  ];
+  const randomIndex = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, pointsOffer.length - 1);
+  return pointsOffer[randomIndex];
+};
+
+const generateTask = () => {
+  const date = generateDate();
+  const time1 = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(date).add(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(-10, 100), 'minute').toDate();
+  const time2 = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(time1).add(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(20, 100), 'minute').toDate();
+  const begDate = time1;
+  const endDate = time2;
+  const diff = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(time2).diff(time1) / (1000 * 60);
+  const duration = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getTimeFromMins"])(diff);
+  const place = generatePlace();
+  return {
+    place: place.name,
+    description: place.description,
+    begDate,
+    endDate,
+    duration,
+    points: generatePoint(),
+    basePrice: Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(500, 2000),
+    isFavorite: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
+  };
+};
+
+
+/***/ }),
+
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/*! exports provided: getRandomInteger, upperCase, sortDate, getTimeFromMins */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomInteger", function() { return getRandomInteger; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "upperCase", function() { return upperCase; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sortDate", function() { return sortDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTimeFromMins", function() { return getTimeFromMins; });
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
-const generatePlace = () => {
-  const place = [
-    {
-      name: 'Amsterdam',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
-    },
-    {
-      name: 'Chamonix',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-    },
-    {
-      name: 'Geneva',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
-    },
-  ];
-  const randomIndex = getRandomInteger(0, place.length - 1);
-  return place[randomIndex];
+const upperCase = (str) => {
+  const str1 = str[0].toUpperCase() + str.substring(1);
+  return str1;
 };
-const generateDate = (maxDaysGap = 7, param = 'day') => {
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-  return dayjs__WEBPACK_IMPORTED_MODULE_0___default()().add(daysGap, param).toDate();
+const sortDate = (a, b) => {
+  const date1 = new Date(a.begDate);
+  const date2 = new Date(b.begDate);
+  return date1 - date2;
 };
-const generatePoint = () => {
-  const points = [
-    'Taxi',
-    'Bus',
-    'Train',
-    'Ship',
-    'Drive',
-    'Flight',
-    'Check-in',
-    'Sightseeing',
-    'Restaurant',
-  ];
-  const randomIndex = getRandomInteger(0, points.length - 1);
-  return points[randomIndex];
-};
-function getTimeFromMins(mins) {
+const getTimeFromMins = (mins) => {
   let hours = Math.trunc(mins / 60);
   let minutes = mins % 60;
   minutes < 10 && minutes !== 0 ? (minutes = `0${minutes}`) : minutes;
@@ -226,31 +479,6 @@ function getTimeFromMins(mins) {
     return `${minutes}M`;
   }
   return `${hours}H ${minutes}M`;
-}
-const generateTask = () => {
-  const date = generateDate();
-  const time1 = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(date).add(getRandomInteger(-10, 100), 'minute').toDate();
-  const time2 = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(time1).add(getRandomInteger(20, 100), 'minute').toDate();
-  const begDate = time1;
-  const endDate = time2;
-  const diff = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(time2).diff(time1) / (1000 * 60);
-  const duration = getTimeFromMins(diff);
-  return {
-    date,
-    description: generatePlace(),
-    begDate,
-    endDate,
-    duration,
-    points: generatePoint(),
-    amount: getRandomInteger(20, 100),
-    offers: {
-      isLuggage: Boolean(getRandomInteger(0, 1)),
-      isComfort: Boolean(getRandomInteger(0, 1)),
-      isMeal: Boolean(getRandomInteger(0, 1)),
-      isSeats: Boolean(getRandomInteger(0, 1)),
-      isTrain: Boolean(getRandomInteger(0, 1)),
-    },
-  };
 };
 
 
@@ -266,78 +494,35 @@ const generateTask = () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editPointForm", function() { return editPointForm; });
-const editPointForm = () =>
-  `<form class='event event--edit' action='#' method='post'>
+/* harmony import */ var _event_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event-type */ "./src/view/event-type.js");
+/* harmony import */ var _offers_selector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./offers-selector */ "./src/view/offers-selector.js");
+
+
+const editPointForm = (task = {}) => {
+  const { points, place, description, begDate, endDate, basePrice } = task;
+  const iconPath = `img/icons/${points.type}.png`;
+  return `<form class='event event--edit' action='#' method='post'>
   <header class='event__header'>
     <div class='event__type-wrapper'>
       <label class='event__type  event__type-btn' for='event-type-toggle-1'>
         <span class='visually-hidden'>Choose event type</span>
-        <img class='event__type-icon' width='17' height='17' src='img/icons/flight.png' alt='Event type icon'>
+        <img class='event__type-icon' width='17' height='17' src= ${iconPath} alt='Event type icon'>
       </label>
       <input class='event__type-toggle  visually-hidden' id='event-type-toggle-1' type='checkbox'>
 
       <div class='event__type-list'>
         <fieldset class='event__type-group'>
           <legend class='visually-hidden'>Event type</legend>
-
-          <div class='event__type-item'>
-            <input id='event-type-taxi-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='taxi'>
-            <label class='event__type-label  event__type-label--taxi' for='event-type-taxi-1'>Taxi</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-bus-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='bus'>
-            <label class='event__type-label  event__type-label--bus' for='event-type-bus-1'>Bus</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-train-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='train'>
-            <label class='event__type-label  event__type-label--train' for='event-type-train-1'>Train</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-ship-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='ship'>
-            <label class='event__type-label  event__type-label--ship' for='event-type-ship-1'>Ship</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-transport-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='transport'>
-            <label class='event__type-label  event__type-label--transport' for='event-type-transport-1'>Transport</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-drive-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='drive'>
-            <label class='event__type-label  event__type-label--drive' for='event-type-drive-1'>Drive</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-flight-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='flight' checked>
-            <label class='event__type-label  event__type-label--flight' for='event-type-flight-1'>Flight</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-check-in-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='check-in'>
-            <label class='event__type-label  event__type-label--check-in' for='event-type-check-in-1'>Check-in</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-sightseeing-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='sightseeing'>
-            <label class='event__type-label  event__type-label--sightseeing' for='event-type-sightseeing-1'>Sightseeing</label>
-          </div>
-
-          <div class='event__type-item'>
-            <input id='event-type-restaurant-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='restaurant'>
-            <label class='event__type-label  event__type-label--restaurant' for='event-type-restaurant-1'>Restaurant</label>
-          </div>
+           ${Object(_event_type__WEBPACK_IMPORTED_MODULE_0__["eventType"])()}
         </fieldset>
       </div>
     </div>
 
     <div class='event__field-group  event__field-group--destination'>
       <label class='event__label  event__type-output' for='event-destination-1'>
-        Flight
+        ${points.type}
       </label>
-      <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='Chamonix' list='destination-list-1'>
+      <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value=${place} list='destination-list-1'>
       <datalist id='destination-list-1'>
         <option value='Amsterdam'></option>
         <option value='Geneva'></option>
@@ -347,10 +532,10 @@ const editPointForm = () =>
 
     <div class='event__field-group  event__field-group--time'>
       <label class='visually-hidden' for='event-start-time-1'>From</label>
-      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value='18/03/19 12:25'>
+      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value=${begDate}>
       &mdash;
       <label class='visually-hidden' for='event-end-time-1'>To</label>
-      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value='18/03/19 13:35'>
+      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value=${endDate}>
     </div>
 
     <div class='event__field-group  event__field-group--price'>
@@ -358,7 +543,7 @@ const editPointForm = () =>
         <span class='visually-hidden'>Price</span>
         &euro;
       </label>
-      <input class='event__input  event__input--price' id='event-price-1' type='text' name='event-price' value='160'>
+      <input class='event__input  event__input--price' id='event-price-1' type='text' name='event-price' value=${basePrice}>
     </div>
 
     <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>
@@ -372,59 +557,17 @@ const editPointForm = () =>
       <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
 
       <div class='event__available-offers'>
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-1' type='checkbox' name='event-offer-luggage' checked>
-          <label class='event__offer-label' for='event-offer-luggage-1'>
-            <span class='event__offer-title'>Add luggage</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>50</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-comfort-1' type='checkbox' name='event-offer-comfort' checked>
-          <label class='event__offer-label' for='event-offer-comfort-1'>
-            <span class='event__offer-title'>Switch to comfort</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>80</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-meal-1' type='checkbox' name='event-offer-meal'>
-          <label class='event__offer-label' for='event-offer-meal-1'>
-            <span class='event__offer-title'>Add meal</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>15</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-seats-1' type='checkbox' name='event-offer-seats'>
-          <label class='event__offer-label' for='event-offer-seats-1'>
-            <span class='event__offer-title'>Choose seats</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>5</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-train-1' type='checkbox' name='event-offer-train'>
-          <label class='event__offer-label' for='event-offer-train-1'>
-            <span class='event__offer-title'>Travel by train</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>40</span>
-          </label>
-        </div>
-      </div>
+      ${Object(_offers_selector__WEBPACK_IMPORTED_MODULE_1__["offersSelector"])(task)}
+          </div>
     </section>
 
     <section class='event__section  event__section--destination'>
       <h3 class='event__section-title  event__section-title--destination'>Destination</h3>
-      <p class='event__destination-description'>Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it's renowned for its skiing.</p>
+      <p class='event__destination-description'>${description}</p>
     </section>
   </section>
 </form>`;
+};
 
 
 /***/ }),
@@ -440,27 +583,45 @@ const editPointForm = () =>
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventOffer", function() { return eventOffer; });
 const eventOffer = (task) => {
-  const { offers } = task;
-  const offersMap = new Map();
-  offersMap.set('isLuggage', { title: 'Add luggage', amount: 50 });
-  offersMap.set('isComfort', { title: 'Switch to comfort', amount: 80 });
-  offersMap.set('isMeal', { title: 'Add meal', amount: 15 });
-  offersMap.set('isSeats', { title: 'Choose seats', amount: 5 });
-  offersMap.set('isTrain', { title: 'Travel by Train', amount: 40 });
+  const { points } = task;
   let list = '';
-  for (const key in offers) {
-    let description;
-    offers[key] === true ? (description = offersMap.get(key)) : null;
-    if (description) {
-      const title = description.title;
-      const amount = description.amount;
-      list += `<li class='event__offer'>
-      <span class='event__offer-title'> ${title}</span>
+  points.offers.forEach((element) => {
+    element.isSelected
+      ? (list += `<li class='event__offer'>
+      <span class='event__offer-title'> ${element.title}</span>
       &plus;&euro;&nbsp;
-      <span class='event__offer-price'>${amount}</span>
-    </li>`;
-    }
-  }
+      <span class='event__offer-price'>${element.price}</span>
+    </li>`)
+      : '';
+  });
+  return list;
+};
+
+
+/***/ }),
+
+/***/ "./src/view/event-type.js":
+/*!********************************!*\
+  !*** ./src/view/event-type.js ***!
+  \********************************/
+/*! exports provided: eventType */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventType", function() { return eventType; });
+/* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../const.js */ "./src/const.js");
+
+const eventType = () => {
+  let list = '';
+  _const_js__WEBPACK_IMPORTED_MODULE_0__["POINTS"].forEach((elem) => {
+    const lowerElem = elem.toLowerCase();
+    list += `<div class='event__type-item'>
+  <input id= 'event-type-${lowerElem}-1' class='event__type-input  visually-hidden' type='radio' name='event-type' value='${lowerElem}'>
+  <label class='event__type-label  event__type-label--${lowerElem}' for='event-type-${lowerElem}-1'>${elem}</label>
+</div>`;
+  });
+
   return list;
 };
 
@@ -518,6 +679,171 @@ const filters = () => (
 
 /***/ }),
 
+/***/ "./src/view/new-point.js":
+/*!*******************************!*\
+  !*** ./src/view/new-point.js ***!
+  \*******************************/
+/*! exports provided: newPointForm */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newPointForm", function() { return newPointForm; });
+/* harmony import */ var _event_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event-type */ "./src/view/event-type.js");
+
+const newPointForm = (task = {}) => {
+  const { points, place, description, begDate, endDate, basePrice } = task;
+  const iconPath = `img/icons/${points.type}.png`;
+  return `<form class='event event--edit' action='#' method='post'>
+  <header class='event__header'>
+    <div class='event__type-wrapper'>
+      <label class='event__type  event__type-btn' for='event-type-toggle-1'>
+        <span class='visually-hidden'>Choose event type</span>
+        <img class='event__type-icon' width='17' height='17' src='img/icons/flight.png' alt='Event type icon'>
+      </label>
+      <input class='event__type-toggle  visually-hidden' id='event-type-toggle-1' type='checkbox'>
+
+      <div class='event__type-list'>
+        <fieldset class='event__type-group'>
+          <legend class='visually-hidden'>Event type</legend>
+          ${Object(_event_type__WEBPACK_IMPORTED_MODULE_0__["eventType"])()}
+        </fieldset>
+      </div>
+    </div>
+
+    <div class='event__field-group  event__field-group--destination'>
+      <label class='event__label  event__type-output' for='event-destination-1'>
+        Flight
+      </label>
+      <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='Geneva' list='destination-list-1'>
+      <datalist id='destination-list-1'>
+        <option value='Amsterdam'></option>
+        <option value='Geneva'></option>
+        <option value='Chamonix'></option>
+      </datalist>
+    </div>
+
+    <div class='event__field-group  event__field-group--time'>
+      <label class='visually-hidden' for='event-start-time-1'>From</label>
+      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value='19/03/19 00:00'>
+      &mdash;
+      <label class='visually-hidden' for='event-end-time-1'>To</label>
+      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value='19/03/19 00:00'>
+    </div>
+
+    <div class='event__field-group  event__field-group--price'>
+      <label class='event__label' for='event-price-1'>
+        <span class='visually-hidden'>Price</span>
+        &euro;
+      </label>
+      <input class='event__input  event__input--price' id='event-price-1' type='text' name='event-price' value=''>
+    </div>
+
+    <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>
+    <button class='event__reset-btn' type='reset'>Cancel</button>
+  </header>
+  <section class='event__details'>
+    <section class='event__section  event__section--offers'>
+      <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
+
+      <div class='event__available-offers'>
+        <div class='event__offer-selector'>
+          <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-1' type='checkbox' name='event-offer-luggage' checked>
+          <label class='event__offer-label' for='event-offer-luggage-1'>
+            <span class='event__offer-title'>Add luggage</span>
+            &plus;&euro;&nbsp;
+            <span class='event__offer-price'>30</span>
+          </label>
+        </div>
+
+        <div class='event__offer-selector'>
+          <input class='event__offer-checkbox  visually-hidden' id='event-offer-comfort-1' type='checkbox' name='event-offer-comfort' checked>
+          <label class='event__offer-label' for='event-offer-comfort-1'>
+            <span class='event__offer-title'>Switch to comfort class</span>
+            &plus;&euro;&nbsp;
+            <span class='event__offer-price'>100</span>
+          </label>
+        </div>
+
+        <div class='event__offer-selector'>
+          <input class='event__offer-checkbox  visually-hidden' id='event-offer-meal-1' type='checkbox' name='event-offer-meal'>
+          <label class='event__offer-label' for='event-offer-meal-1'>
+            <span class='event__offer-title'>Add meal</span>
+            &plus;&euro;&nbsp;
+            <span class='event__offer-price'>15</span>
+          </label>
+        </div>
+
+        <div class='event__offer-selector'>
+          <input class='event__offer-checkbox  visually-hidden' id='event-offer-seats-1' type='checkbox' name='event-offer-seats'>
+          <label class='event__offer-label' for='event-offer-seats-1'>
+            <span class='event__offer-title'>Choose seats</span>
+            &plus;&euro;&nbsp;
+            <span class='event__offer-price'>5</span>
+          </label>
+        </div>
+
+        <div class='event__offer-selector'>
+          <input class='event__offer-checkbox  visually-hidden' id='event-offer-train-1' type='checkbox' name='event-offer-train'>
+          <label class='event__offer-label' for='event-offer-train-1'>
+            <span class='event__offer-title'>Travel by train</span>
+            &plus;&euro;&nbsp;
+            <span class='event__offer-price'>40</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class='event__section  event__section--destination'>
+      <h3 class='event__section-title  event__section-title--destination'>Destination</h3>
+      <p class='event__destination-description'>Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+
+      <div class='event__photos-container'>
+        <div class='event__photos-tape'>
+          <img class='event__photo' src='img/photos/1.jpg' alt='Event photo'>
+          <img class='event__photo' src='img/photos/2.jpg' alt='Event photo'>
+          <img class='event__photo' src='img/photos/3.jpg' alt='Event photo'>
+          <img class='event__photo' src='img/photos/4.jpg' alt='Event photo'>
+          <img class='event__photo' src='img/photos/5.jpg' alt='Event photo'>
+        </div>
+      </div>
+    </section>
+  </section>
+  </form>`;
+};
+
+
+/***/ }),
+
+/***/ "./src/view/offers-selector.js":
+/*!*************************************!*\
+  !*** ./src/view/offers-selector.js ***!
+  \*************************************/
+/*! exports provided: offersSelector */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "offersSelector", function() { return offersSelector; });
+const offersSelector = (task) => {
+  const { points } = task;
+  let list = '';
+  points.offers.forEach((element) => {
+    list += `<div class='event__offer-selector'>
+    <input class='event__offer-checkbox  visually-hidden' id='event-offer-${element.name}-1' type=${element.name} name='event-offer-${element.name}' checked>
+    <label class='event__offer-label' for='event-offer-${element.name}-1'>
+      <span class='event__offer-title'>${element.title}</span>
+      &plus;&euro;&nbsp;
+      <span class='event__offer-price'>${element.price}</span>
+    </label>
+    </div>`;
+  });
+  return list;
+};
+
+
+/***/ }),
+
 /***/ "./src/view/point.js":
 /*!***************************!*\
   !*** ./src/view/point.js ***!
@@ -530,23 +856,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "point", function() { return point; });
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _event_offer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./event-offer */ "./src/view/event-offer.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+/* harmony import */ var _event_offer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./event-offer */ "./src/view/event-offer.js");
 
 
 
 const point = (task) => {
-  const { date, description, begDate, endDate, duration, points, amount } = task;
-  const pointDate = date !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(date).format('MMM D') : '';
+  const { place, begDate, endDate, duration, points, basePrice } = task;
+  const pointDate = begDate !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(begDate).format('MMM D') : '';
   const beginning = begDate !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(begDate).format('HH:mm') : '';
   const ending = endDate !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(endDate).format('HH:mm') : '';
+  const iconPath = `img/icons/${points.type}.png`;
 
   return `<li class='trip-events__item'>
   <div class='event'>
     <time class='event__date' datetime='2019-03-18'>${pointDate}</time>
     <div class='event__type'>
-      <img class='event__type-icon' width='42' height='42' src='img/icons/flight.png' alt='Event type icon'>
+      <img class='event__type-icon' width='42' height='42' src=${iconPath} alt='Event type icon'>
     </div>
-    <h3 class='event__title'>${points} ${description.name}</h3>
+    <h3 class='event__title'>${Object(_utils__WEBPACK_IMPORTED_MODULE_1__["upperCase"])(points.type)} ${place}</h3>
     <div class='event__schedule'>
       <p class='event__time'>
         <time class='event__start-time' datetime=${beginning}>${beginning}</time>
@@ -556,11 +884,11 @@ const point = (task) => {
       <p class='event__duration'>${duration}</p>
     </div>
     <p class='event__price'>
-      &euro;&nbsp;<span class='event__price-value'>${amount}</span>
+      &euro;&nbsp;<span class='event__price-value'>${basePrice}</span>
     </p>
     <h4 class='visually-hidden'>Offers:</h4>
     <ul class='event__selected-offers'>
-      ${Object(_event_offer__WEBPACK_IMPORTED_MODULE_1__["eventOffer"])(task)}
+      ${Object(_event_offer__WEBPACK_IMPORTED_MODULE_2__["eventOffer"])(task)}
     </ul>
     <button class='event__favorite-btn' type='button'>
       <span class='visually-hidden'>Add to favorite</span>
