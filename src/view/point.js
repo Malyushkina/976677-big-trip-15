@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { upperCase } from '../utils';
+import { getUpperCase } from '../utils';
 import { eventOffer } from './event-offer';
 export const point = (task) => {
   const { place, begDate, endDate, duration, points, basePrice } = task;
@@ -14,7 +14,7 @@ export const point = (task) => {
     <div class='event__type'>
       <img class='event__type-icon' width='42' height='42' src=${iconPath} alt='Event type icon'>
     </div>
-    <h3 class='event__title'>${upperCase(points.type)} ${place.name}</h3>
+    <h3 class='event__title'>${getUpperCase(points.type)} ${place.name}</h3>
     <div class='event__schedule'>
       <p class='event__time'>
         <time class='event__start-time' datetime=${beginning}>${beginning}</time>

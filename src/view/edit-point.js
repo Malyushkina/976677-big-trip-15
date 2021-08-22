@@ -2,9 +2,9 @@ import { eventType } from './event-type';
 import { offersSelector } from './offers-selector';
 import { destinationList } from './destination-list';
 import { photosContainer } from './photos-container';
-import { TASK } from '../const';
+import { taskDefault } from '../mock/task';
 
-export const editPointForm = (task = TASK) => {
+export const editPointForm = (task = taskDefault) => {
   const { points, place, begDate, endDate, basePrice } = task;
   const iconPath = `img/icons/${points.type}.png`;
   return `<form class='event event--edit' action='#' method='post'>

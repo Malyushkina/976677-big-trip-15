@@ -1,7 +1,7 @@
-import { DESTINATION } from '../const';
+import { destination } from '../mock/task';
 export const destinationList = () => {
   let list = '';
-  DESTINATION.forEach((element) => {
+  destination.forEach((element) => {
     list += `<option value=${element.name}></option>`;
   });
   return list;
