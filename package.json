@@ -3,6 +3,7 @@
   "version": "15.0.0",
   "private": true,
   "description": "Проект «Большое путешествие» от HTML Academy",
+
   "scripts": {
     "eslint": "eslint src/",
     "test": "npm run eslint",
@@ -18,6 +19,7 @@
     "node": "12"
   },
   "dependencies": {
+    "dayjs": "1.9.5",
     "webpack": "4.44.2",
     "webpack-cli": "3.3.12"
   }
