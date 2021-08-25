@@ -1,12 +1,11 @@
-import { eventType } from './event-type';
-import { offersSelector } from './offers-selector';
-import { destinationList } from './destination-list';
-import { photosContainer } from './photos-container';
-import { taskDefault } from '../mock/task';
+import EventTypeView from './event-type';
+import OffersSelectorView  from './offers-selector';
+import DestinationListView from './destination-list';
+import PhotosContainerView from './photos-container';
+import { createElement } from '../utils';
 
-export const editPointForm = (task = taskDefault) => {
-
-  const { basePrice, dateFrom, dateTo, destination, type} = task;
+const createEditPointTemplate = (task) => {
+  const { basePrice, dateFrom, destination, dateTo, type } = task;
   const iconPath = `img/icons/${type}.png`;
   return `<form class='event event--edit' action='#' method='post'>
   <header class='event__header'>
@@ -20,7 +19,7 @@ export const editPointForm = (task = taskDefault) => {
       <div class='event__type-list'>
         <fieldset class='event__type-group'>
           <legend class='visually-hidden'>Event type</legend>
-           ${eventType()}
+           ${new EventTypeView().getTemplate()}
         </fieldset>
       </div>
     </div>
@@ -32,7 +31,7 @@ export const editPointForm = (task = taskDefault) => {
       <input class='event__input  event__input--destination' id='event-destination-1'
       type='text' name='event-destination' value=${destination.name} list='destination-list-1'>
       <datalist id='destination-list-1'>
-        ${destinationList()}
+        ${new DestinationListView().getElement()}
       </datalist>
     </div>
 
@@ -63,15 +62,48 @@ export const editPointForm = (task = taskDefault) => {
       <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
 
       <div class='event__available-offers'>
-      ${offersSelector(task)}
+      ${new OffersSelectorView(task).getTemplate()}
           </div>
     </section>
 
     <section class='event__section  event__section--destination'>
       <h3 class='event__section-title  event__section-title--destination'>Destination</h3>
       <p class='event__destination-description'>${destination.description}</p>
-      ${photosContainer(destination)}
+      ${new PhotosContainerView(destination).getTemplate()}
     </section>
   </section>
 </form>`;
 };
+
+const BLANK_TASK = {
+  basePrice: 0,
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  id: '',
+  type: '',
+  offers: '',
+  isFavorite: false,
+};
+export default class EditPoint {
+  constructor(task = BLANK_TASK) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditPointTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

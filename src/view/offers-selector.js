@@ -1,4 +1,5 @@
-export const offersSelector = (task) => {
+import { createElement } from '../utils';
+const createOffersSelectorTemplate = (task) => {
   const { offers } = task;
   let list = '';
   offers.forEach((element) => {
@@ -13,3 +14,25 @@ export const offersSelector = (task) => {
   });
   return list;
 };
+export default class OffersSelector {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createOffersSelectorTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

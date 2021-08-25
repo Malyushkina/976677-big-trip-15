@@ -1,21 +1,18 @@
 /* eslint-disable quotes */
-import { tripSortForm } from './view/trip-sort.js';
-import { siteMenu } from './view/site-menu.js';
-import { filters } from './view/filters.js';
-import { routeAndCost } from './view/route-and-cost';
-import { tripEventsList } from './view/events-list.js';
-import { editPointForm } from './view/edit-point.js';
+import TripSortFormView from './view/trip-sort.js';
+import SiteMenuView from './view/site-menu.js';
+import FiltersView from './view/filters.js';
+import RouteAndCostView from './view/route-and-cost';
+
+import EditPointView from './view/edit-point.js';
 import { generateTask } from './mock/task';
-import { sortDate, generateTaskId } from './utils.js';
+import { sortDate, generateTaskId, render, RenderPosition } from './utils.js';
 import { TASK_COUNT } from './const.js';
-import { point } from './view/point';
+import PointView from './view/point';
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 tasks.sort(sortDate);
 generateTaskId(tasks);
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const sitePageBody = document.querySelector('.page-body');
 
@@ -26,24 +23,14 @@ const siteTripMain = sitePageHeader.querySelector('.trip-main');
 
 const siteMainElement = document.querySelector('.page-main');
 const siteTripEvents = siteMainElement.querySelector('.trip-events');
-
-render(siteTripEvents, tripSortForm(), 'afterbegin');
-render(siteTripEvents, tripEventsList(), 'beforeend');
-render(siteMenuElement, siteMenu(), 'beforeend');
-render(siteTripFilters, filters(), 'beforeend');
-render(siteTripMain, routeAndCost(), 'afterbegin');
-
 const siteTripList = siteTripEvents.querySelector('.trip-events__list');
-render(siteTripList, editPointForm(tasks[0]), 'afterbegin');
+
+render(siteTripEvents, new TripSortFormView().getElement(), RenderPosition.AFTERBEGIN);
+render(siteMenuElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
+render(siteTripFilters, new FiltersView().getElement(), RenderPosition.BEFOREEND);
+render(siteTripMain, new RouteAndCostView().getElement(), RenderPosition.AFTERBEGIN);
+
+render(siteTripList, new EditPointView(tasks[0]).getElement(), RenderPosition.AFTERBEGIN);
 for (let i = 1; i < TASK_COUNT; i++) {
-  render(siteTripList, point(tasks[i]), 'beforeend');
+  render(siteTripList, new PointView(tasks[i]).getElement(), RenderPosition.BEFOREEND);
 }
-// fetch('https://15.ecmascript.pages.academy/big-trip/points', {
-//   headers: {
-//     Authorization: `Basic ${Math.random()}`,
-//   },
-// })
-//   .then((response) => response.json())
-//   .then((res) => {
-//     console.log(res, res);
-//   });

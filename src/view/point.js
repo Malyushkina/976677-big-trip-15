@@ -1,13 +1,16 @@
 import dayjs from 'dayjs';
-import { getUpperCase,getDuration } from '../utils';
-import { eventOffer } from './event-offer';
-export const point = (task) => {
-  const { basePrice, dateFrom, dateTo, destination, type} = task;
+import { getUpperCase, getDuration, createElement } from '../utils';
+import EventOfferView from './event-offer';
+
+const createPointTemplate = (task) => {
+  const { basePrice, dateFrom, dateTo, destination, type } = task;
   const pointDate = dateFrom !== null ? dayjs(dateFrom).format('MMM D') : '';
   const beginning = dateFrom !== null ? dayjs(dateFrom).format('HH:mm') : '';
   const ending = dateTo !== null ? dayjs(dateTo).format('HH:mm') : '';
   const iconPath = `img/icons/${type}.png`;
   const duration = getDuration(dateFrom, dateTo);
+  const eventOffers = new EventOfferView(task).getTemplate();
+
   return `<li class='trip-events__item'>
   <div class='event'>
     <time class='event__date' datetime='2019-03-18'>${pointDate}</time>
@@ -28,7 +31,7 @@ export const point = (task) => {
     </p>
     <h4 class='visually-hidden'>Offers:</h4>
     <ul class='event__selected-offers'>
-      ${eventOffer(task)}
+      ${eventOffers}
     </ul>
     <button class='event__favorite-btn' type='button'>
       <span class='visually-hidden'>Add to favorite</span>
@@ -42,3 +45,25 @@ export const point = (task) => {
   </div>
 </li>`;
 };
+export default class Point {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

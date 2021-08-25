@@ -1,4 +1,5 @@
-export const eventOffer = (task) => {
+import { createElement } from '../utils';
+const createEventOfferTemplate = (task) => {
   const { offers } = task;
   let list = '';
   offers.forEach((element) => {
@@ -12,3 +13,25 @@ export const eventOffer = (task) => {
   });
   return list;
 };
+export default class EventOffer {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventOfferTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

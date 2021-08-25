@@ -22,3 +22,4 @@ export const OFFERS = [
   { name: 'meal', title: 'Add meal' },
   { name: 'seats', title: 'Choose seats' },
 ];
+export const PLACES = ['Amsterdam', 'Geneva', 'Chamonix'];
