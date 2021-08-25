@@ -6,13 +6,13 @@ import { routeAndCost } from './view/route-and-cost';
 import { tripEventsList } from './view/events-list.js';
 import { editPointForm } from './view/edit-point.js';
 import { generateTask } from './mock/task';
-import { sortDate } from './utils.js';
+import { sortDate, generateTaskId } from './utils.js';
 import { TASK_COUNT } from './const.js';
 import { point } from './view/point';
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 tasks.sort(sortDate);
-
+generateTaskId(tasks);
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -38,3 +38,12 @@ render(siteTripList, editPointForm(tasks[0]), 'afterbegin');
 for (let i = 1; i < TASK_COUNT; i++) {
   render(siteTripList, point(tasks[i]), 'beforeend');
 }
+// fetch('https://15.ecmascript.pages.academy/big-trip/points', {
+//   headers: {
+//     Authorization: `Basic ${Math.random()}`,
+//   },
+// })
+//   .then((response) => response.json())
+//   .then((res) => {
+//     console.log(res, res);
+//   });

@@ -1,20 +1,20 @@
 import dayjs from 'dayjs';
-import { getUpperCase } from '../utils';
+import { getUpperCase,getDuration } from '../utils';
 import { eventOffer } from './event-offer';
 export const point = (task) => {
-  const { place, begDate, endDate, duration, points, basePrice } = task;
-  const pointDate = begDate !== null ? dayjs(begDate).format('MMM D') : '';
-  const beginning = begDate !== null ? dayjs(begDate).format('HH:mm') : '';
-  const ending = endDate !== null ? dayjs(endDate).format('HH:mm') : '';
-  const iconPath = `img/icons/${points.type}.png`;
-
+  const { basePrice, dateFrom, dateTo, destination, type} = task;
+  const pointDate = dateFrom !== null ? dayjs(dateFrom).format('MMM D') : '';
+  const beginning = dateFrom !== null ? dayjs(dateFrom).format('HH:mm') : '';
+  const ending = dateTo !== null ? dayjs(dateTo).format('HH:mm') : '';
+  const iconPath = `img/icons/${type}.png`;
+  const duration = getDuration(dateFrom, dateTo);
   return `<li class='trip-events__item'>
   <div class='event'>
     <time class='event__date' datetime='2019-03-18'>${pointDate}</time>
     <div class='event__type'>
       <img class='event__type-icon' width='42' height='42' src=${iconPath} alt='Event type icon'>
     </div>
-    <h3 class='event__title'>${getUpperCase(points.type)} ${place.name}</h3>
+    <h3 class='event__title'>${getUpperCase(type)} ${destination.name}</h3>
     <div class='event__schedule'>
       <p class='event__time'>
         <time class='event__start-time' datetime=${beginning}>${beginning}</time>

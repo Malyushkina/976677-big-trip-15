@@ -25,8 +25,8 @@ export const getUpperCase = (str) => {
 };
 
 export const sortDate = (a, b) => {
-  const date1 = new Date(a.begDate);
-  const date2 = new Date(b.begDate);
+  const date1 = new Date(a.dateFrom);
+  const date2 = new Date(b.dateFrom);
   return date1 - date2;
 };
 
@@ -67,10 +67,8 @@ export const getOffer = () => {
   }
   set.forEach((elem) => {
     offers.push({
-      name: OFFERS[elem].name,
       title: OFFERS[elem].title,
       price: getRandomInteger(5, 70),
-      isSelected: Boolean(getRandomInteger(0, 1)),
     });
   });
 
@@ -89,4 +87,14 @@ export const getPictureList = () => {
     pictures.push({ src: picturePath, description: getRandomProposal(1) });
   }
   return { pictures };
+};
+export const getDuration = (dateFrom, dateTo) => {
+  const diff = dayjs(dateTo).diff(dateFrom) / (1000 * 60);
+  const duration = getTimeFromMins(diff);
+  return duration;
+};
+export const generateTaskId = (tasks) => {
+  for (let i = 0; i < tasks.length; i++) {
+    tasks[i].id = i;
+  }
 };

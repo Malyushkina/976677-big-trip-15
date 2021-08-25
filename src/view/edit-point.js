@@ -5,8 +5,9 @@ import { photosContainer } from './photos-container';
 import { taskDefault } from '../mock/task';
 
 export const editPointForm = (task = taskDefault) => {
-  const { points, place, begDate, endDate, basePrice } = task;
-  const iconPath = `img/icons/${points.type}.png`;
+
+  const { basePrice, dateFrom, dateTo, destination, type} = task;
+  const iconPath = `img/icons/${type}.png`;
   return `<form class='event event--edit' action='#' method='post'>
   <header class='event__header'>
     <div class='event__type-wrapper'>
@@ -26,10 +27,10 @@ export const editPointForm = (task = taskDefault) => {
 
     <div class='event__field-group  event__field-group--destination'>
       <label class='event__label  event__type-output' for='event-destination-1'>
-        ${points.type}
+        ${type}
       </label>
       <input class='event__input  event__input--destination' id='event-destination-1'
-      type='text' name='event-destination' value=${place.name} list='destination-list-1'>
+      type='text' name='event-destination' value=${destination.name} list='destination-list-1'>
       <datalist id='destination-list-1'>
         ${destinationList()}
       </datalist>
@@ -37,10 +38,10 @@ export const editPointForm = (task = taskDefault) => {
 
     <div class='event__field-group  event__field-group--time'>
       <label class='visually-hidden' for='event-start-time-1'>From</label>
-      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value=${begDate}>
+      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value=${dateFrom}>
       &mdash;
       <label class='visually-hidden' for='event-end-time-1'>To</label>
-      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value=${endDate}>
+      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value=${dateTo}>
     </div>
 
     <div class='event__field-group  event__field-group--price'>
@@ -68,8 +69,8 @@ export const editPointForm = (task = taskDefault) => {
 
     <section class='event__section  event__section--destination'>
       <h3 class='event__section-title  event__section-title--destination'>Destination</h3>
-      <p class='event__destination-description'>${place.description}</p>
-      ${photosContainer(place)}
+      <p class='event__destination-description'>${destination.description}</p>
+      ${photosContainer(destination)}
     </section>
   </section>
 </form>`;

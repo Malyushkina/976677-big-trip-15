@@ -1,4 +1,4 @@
-export const PICTURE_COUNT = 5;
+export const PICTURE_COUNT = 4;
 export const TASK_COUNT = 14;
 export const TASK_COUNT_PER_STEP = 8;
 export const POINTS = [

@@ -2,11 +2,10 @@ import dayjs from 'dayjs';
 import {
   getRandomInteger,
   getOffer,
-  getTimeFromMins,
   getRandomProposal,
   getPictureList,
   generateDate,
-  generatePlace
+  generatePlace,
 } from '../utils';
 
 export const destination = [
@@ -39,20 +38,34 @@ export const taskDefault = {
 };
 export const generateTask = () => {
   const date = generateDate();
-  const time1 = dayjs(date).add(getRandomInteger(-10, 100), 'minute').toDate();
-  const time2 = dayjs(time1).add(getRandomInteger(20, 100), 'minute').toDate();
-  const begDate = time1;
-  const endDate = time2;
-  const diff = dayjs(time2).diff(time1) / (1000 * 60);
-  const duration = getTimeFromMins(diff);
+  const dateFrom = dayjs(date).add(getRandomInteger(-10, 100), 'minute').toDate();
+  const dateTo = dayjs(dateFrom).add(getRandomInteger(20, 100), 'minute').toDate();
+  const point = getOffer();
 
   return {
-    place: generatePlace(),
-    begDate,
-    endDate,
-    duration,
-    points: getOffer(),
     basePrice: getRandomInteger(500, 2000),
+    dateFrom,
+    dateTo,
+    destination: generatePlace(),
+    id:'',
+    type: point.type,
+    offers: point.offers,
     isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };
+// 0:
+// base_price: 1000
+// date_from: "2021-08-22T06:15:52.809Z"
+// date_to: "2021-08-22T09:49:26.258Z"
+// destination: {name: "Helsinki", description: "Helsinki, is a beautiful city, famous for its crow…street markets with the best street food in Asia.", pictures: Array(4)}
+// id: "0"
+// is_favorite: true
+// offers: Array(2)
+// 0: {title: "Choose seats", price: 90}
+// 1:
+// price: 120
+// title: "Upgrade to business class"
+// [[Prototype]]: Object
+// length: 2
+// [[Prototype]]: Array(0)
+// type: "flight"

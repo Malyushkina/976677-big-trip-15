@@ -1,8 +1,8 @@
 export const eventOffer = (task) => {
-  const { points } = task;
+  const { offers } = task;
   let list = '';
-  points.offers.forEach((element) => {
-    element.isSelected
+  offers.forEach((element) => {
+    element
       ? (list += `<li class='event__offer'>
       <span class='event__offer-title'> ${element.title}</span>
       &plus;&euro;&nbsp;
