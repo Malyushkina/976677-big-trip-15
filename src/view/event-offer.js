@@ -1,8 +1,9 @@
-export const eventOffer = (task) => {
-  const { points } = task;
+import { createElement } from '../utils';
+const createEventOfferTemplate = (task) => {
+  const { offers } = task;
   let list = '';
-  points.offers.forEach((element) => {
-    element.isSelected
+  offers.forEach((element) => {
+    element
       ? (list += `<li class='event__offer'>
       <span class='event__offer-title'> ${element.title}</span>
       &plus;&euro;&nbsp;
@@ -12,3 +13,25 @@ export const eventOffer = (task) => {
   });
   return list;
 };
+export default class EventOffer {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventOfferTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

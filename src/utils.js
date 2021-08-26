@@ -1,6 +1,27 @@
-import { PICTURE_COUNT, POINTS, OFFERS } from './const';
-import { destination } from './mock/task';
+import { PICTURE_COUNT, POINTS, OFFERS, PLACES } from './const';
 import dayjs from 'dayjs';
+
+export const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
 
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -9,24 +30,14 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const generatePlace = () => {
-  const randomIndex = getRandomInteger(0, destination.length - 1);
-  return destination[randomIndex];
-};
-
-export const generateDate = (maxDaysGap = 7, param = 'day') => {
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-  return dayjs().add(daysGap, param).toDate();
-};
-
 export const getUpperCase = (str) => {
   const str1 = str[0].toUpperCase() + str.substring(1);
   return str1;
 };
 
 export const sortDate = (a, b) => {
-  const date1 = new Date(a.begDate);
-  const date2 = new Date(b.begDate);
+  const date1 = new Date(a.dateFrom);
+  const date2 = new Date(b.dateFrom);
   return date1 - date2;
 };
 
@@ -67,10 +78,8 @@ export const getOffer = () => {
   }
   set.forEach((elem) => {
     offers.push({
-      name: OFFERS[elem].name,
       title: OFFERS[elem].title,
       price: getRandomInteger(5, 70),
-      isSelected: Boolean(getRandomInteger(0, 1)),
     });
   });
 
@@ -89,4 +98,39 @@ export const getPictureList = () => {
     pictures.push({ src: picturePath, description: getRandomProposal(1) });
   }
   return { pictures };
+};
+
+export const getDestination = () => {
+  const destination = [];
+  PLACES.forEach((elem) => {
+    destination.push({
+      name: elem,
+      description: getRandomProposal(5),
+      pictures: getPictureList().pictures,
+    });
+  });
+  return destination;
+};
+
+export const generatePlace = () => {
+  const destination = getDestination();
+  const randomIndex = getRandomInteger(0, destination.length - 1);
+  return destination[randomIndex];
+};
+
+export const generateDate = (maxDaysGap = 7, param = 'day') => {
+  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  return dayjs().add(daysGap, param).toDate();
+};
+
+export const getDuration = (dateFrom, dateTo) => {
+  const diff = dayjs(dateTo).diff(dateFrom) / (1000 * 60);
+  const duration = getTimeFromMins(diff);
+  return duration;
+};
+
+export const generateTaskId = (tasks) => {
+  for (let i = 0; i < tasks.length; i++) {
+    tasks[i].id = i;
+  }
 };

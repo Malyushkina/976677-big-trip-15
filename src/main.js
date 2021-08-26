@@ -1,21 +1,20 @@
 /* eslint-disable quotes */
-import { tripSortForm } from './view/trip-sort.js';
-import { siteMenu } from './view/site-menu.js';
-import { filters } from './view/filters.js';
-import { routeAndCost } from './view/route-and-cost';
-import { tripEventsList } from './view/events-list.js';
-import { editPointForm } from './view/edit-point.js';
+import TripSortFormView from './view/trip-sort.js';
+import SiteMenuView from './view/site-menu.js';
+import FiltersView from './view/filters.js';
+import RouteAndCostView from './view/route-and-cost';
+import EventListView from './view/events-list';
+import EditPointView from './view/edit-point.js';
+import PointView from './view/point';
+import BoardView from './view/board';
+import NoPointView from './view/no-point';
 import { generateTask } from './mock/task';
-import { sortDate } from './utils.js';
+import { sortDate, generateTaskId, render, RenderPosition } from './utils.js';
 import { TASK_COUNT } from './const.js';
-import { point } from './view/point';
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 tasks.sort(sortDate);
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+generateTaskId(tasks);
 
 const sitePageBody = document.querySelector('.page-body');
 
@@ -25,16 +24,68 @@ const siteTripFilters = sitePageHeader.querySelector('.trip-controls__filters');
 const siteTripMain = sitePageHeader.querySelector('.trip-main');
 
 const siteMainElement = document.querySelector('.page-main');
-const siteTripEvents = siteMainElement.querySelector('.trip-events');
+const siteMainContainer = siteMainElement.querySelector('.page-body__container');
 
-render(siteTripEvents, tripSortForm(), 'afterbegin');
-render(siteTripEvents, tripEventsList(), 'beforeend');
-render(siteMenuElement, siteMenu(), 'beforeend');
-render(siteTripFilters, filters(), 'beforeend');
-render(siteTripMain, routeAndCost(), 'afterbegin');
+render(siteMenuElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
+render(siteTripMain, new RouteAndCostView().getElement(), RenderPosition.AFTERBEGIN);
+render(siteTripFilters, new FiltersView().getElement(), RenderPosition.BEFOREEND);
 
-const siteTripList = siteTripEvents.querySelector('.trip-events__list');
-render(siteTripList, editPointForm(tasks[0]), 'afterbegin');
-for (let i = 1; i < TASK_COUNT; i++) {
-  render(siteTripList, point(tasks[i]), 'beforeend');
+const boardComponent = new BoardView();
+const pointListComponent = new EventListView();
+render(siteMainContainer, boardComponent.getElement(), RenderPosition.AFTERBEGIN);
+render(boardComponent.getElement(), new TripSortFormView().getElement(), RenderPosition.AFTERBEGIN);
+render(boardComponent.getElement(), pointListComponent.getElement(), RenderPosition.BEFOREEND);
+
+if (tasks.every((task) => task)) {
+  render(boardComponent.getElement(), new NoPointView().getElement(), RenderPosition.BEFOREEND);
+} else {
+  render(boardComponent.getElement(), new TripSortFormView().getElement(), RenderPosition.BEFOREEND);
+}
+const renderTask = (taskListElement, task) => {
+  const taskComponent = new PointView(task);
+  const taskEditComponent = new EditPointView(task);
+
+  const replaceCardToForm = () => {
+    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+  };
+
+  const replaceFormToCard = () => {
+    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+  };
+  const onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+  taskComponent
+    .getElement()
+    .querySelector('.event__rollup-btn')
+    .addEventListener('click', () => {
+      replaceCardToForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+  if (taskListElement.querySelector('.event--edit')) {
+    taskEditComponent
+      .getElement()
+      .querySelector('form')
+      .addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        replaceFormToCard();
+      });
+    document.removeEventListener('keydown', onEscKeyDown);
+  }
+  taskEditComponent
+    .getElement()
+    .querySelector('.event__rollup-btn')
+    .addEventListener('click', (evt) => {
+      evt.preventDefault();
+      replaceFormToCard();
+    });
+  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+for (let i = 0; i < TASK_COUNT; i++) {
+  renderTask(pointListComponent.getElement(), tasks[i]);
 }

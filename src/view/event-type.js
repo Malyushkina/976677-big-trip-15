@@ -1,5 +1,6 @@
 import { POINTS } from '../const.js';
-export const eventType = () => {
+import { createElement } from '../utils';
+const createEventTypeTemplate = () => {
   let list = '';
   POINTS.forEach((elem) => {
     const lowerElem = elem.toLowerCase();
@@ -10,3 +11,24 @@ export const eventType = () => {
   });
   return list;
 };
+export default class EventType{
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTypeTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

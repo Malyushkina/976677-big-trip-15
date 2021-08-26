@@ -1,5 +1,5 @@
-export const PICTURE_COUNT = 5;
-export const TASK_COUNT = 14;
+export const PICTURE_COUNT = 4;
+export const TASK_COUNT = 20;
 export const TASK_COUNT_PER_STEP = 8;
 export const POINTS = [
   'Taxi',
@@ -22,3 +22,4 @@ export const OFFERS = [
   { name: 'meal', title: 'Add meal' },
   { name: 'seats', title: 'Choose seats' },
 ];
+export const PLACES = ['Amsterdam', 'Geneva', 'Chamonix'];

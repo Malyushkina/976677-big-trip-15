@@ -1,12 +1,12 @@
-import { eventType } from './event-type';
-import { offersSelector } from './offers-selector';
-import { destinationList } from './destination-list';
-import { photosContainer } from './photos-container';
-import { taskDefault } from '../mock/task';
+import EventTypeView from './event-type';
+import OffersSelectorView  from './offers-selector';
+import DestinationListView from './destination-list';
+import PhotosContainerView from './photos-container';
+import { createElement } from '../utils';
 
-export const editPointForm = (task = taskDefault) => {
-  const { points, place, begDate, endDate, basePrice } = task;
-  const iconPath = `img/icons/${points.type}.png`;
+const createEditPointTemplate = (task) => {
+  const { basePrice, dateFrom, destination, dateTo, type } = task;
+  const iconPath = `img/icons/${type}.png`;
   return `<form class='event event--edit' action='#' method='post'>
   <header class='event__header'>
     <div class='event__type-wrapper'>
@@ -19,28 +19,28 @@ export const editPointForm = (task = taskDefault) => {
       <div class='event__type-list'>
         <fieldset class='event__type-group'>
           <legend class='visually-hidden'>Event type</legend>
-           ${eventType()}
+           ${new EventTypeView().getTemplate()}
         </fieldset>
       </div>
     </div>
 
     <div class='event__field-group  event__field-group--destination'>
       <label class='event__label  event__type-output' for='event-destination-1'>
-        ${points.type}
+        ${type}
       </label>
       <input class='event__input  event__input--destination' id='event-destination-1'
-      type='text' name='event-destination' value=${place.name} list='destination-list-1'>
+      type='text' name='event-destination' value=${destination.name} list='destination-list-1'>
       <datalist id='destination-list-1'>
-        ${destinationList()}
+        ${new DestinationListView().getElement()}
       </datalist>
     </div>
 
     <div class='event__field-group  event__field-group--time'>
       <label class='visually-hidden' for='event-start-time-1'>From</label>
-      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value=${begDate}>
+      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value=${dateFrom}>
       &mdash;
       <label class='visually-hidden' for='event-end-time-1'>To</label>
-      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value=${endDate}>
+      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value=${dateTo}>
     </div>
 
     <div class='event__field-group  event__field-group--price'>
@@ -62,15 +62,48 @@ export const editPointForm = (task = taskDefault) => {
       <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
 
       <div class='event__available-offers'>
-      ${offersSelector(task)}
+      ${new OffersSelectorView(task).getTemplate()}
           </div>
     </section>
 
     <section class='event__section  event__section--destination'>
       <h3 class='event__section-title  event__section-title--destination'>Destination</h3>
-      <p class='event__destination-description'>${place.description}</p>
-      ${photosContainer(place)}
+      <p class='event__destination-description'>${destination.description}</p>
+      ${new PhotosContainerView(destination).getTemplate()}
     </section>
   </section>
 </form>`;
 };
+
+const BLANK_TASK = {
+  basePrice: 0,
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  id: '',
+  type: '',
+  offers: '',
+  isFavorite: false,
+};
+export default class EditPoint {
+  constructor(task = BLANK_TASK) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditPointTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
