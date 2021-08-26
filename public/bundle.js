@@ -102,12 +102,20 @@
 /*!**********************!*\
   !*** ./src/const.js ***!
   \**********************/
-/*! exports provided: POINTS */
+/*! exports provided: PICTURE_COUNT, TASK_COUNT, TASK_COUNT_PER_STEP, POINTS, OFFERS, PLACES */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PICTURE_COUNT", function() { return PICTURE_COUNT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TASK_COUNT", function() { return TASK_COUNT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TASK_COUNT_PER_STEP", function() { return TASK_COUNT_PER_STEP; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "POINTS", function() { return POINTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OFFERS", function() { return OFFERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PLACES", function() { return PLACES; });
+const PICTURE_COUNT = 4;
+const TASK_COUNT = 14;
+const TASK_COUNT_PER_STEP = 8;
 const POINTS = [
   'Taxi',
   'Bus',
@@ -119,6 +127,17 @@ const POINTS = [
   'Sightseeing',
   'Restaurant',
 ];
+const OFFERS = [
+  { name: 'business', title: 'Upgrade to a business class' },
+  { name: 'radio', title: 'Choose the radio station' },
+  { name: 'uber', title: 'Order Uber' },
+  { name: 'rent', title: 'Rent a car' },
+  { name: 'luggage', title: 'Add luggage' },
+  { name: 'comfort', title: 'Switch to comfort' },
+  { name: 'meal', title: 'Add meal' },
+  { name: 'seats', title: 'Choose seats' },
+];
+const PLACES = ['Amsterdam', 'Geneva', 'Chamonix'];
 
 
 /***/ }),
@@ -136,12 +155,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _view_site_menu_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./view/site-menu.js */ "./src/view/site-menu.js");
 /* harmony import */ var _view_filters_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view/filters.js */ "./src/view/filters.js");
 /* harmony import */ var _view_route_and_cost__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view/route-and-cost */ "./src/view/route-and-cost.js");
-/* harmony import */ var _view_events_list_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/events-list.js */ "./src/view/events-list.js");
-/* harmony import */ var _view_new_point_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/new-point.js */ "./src/view/new-point.js");
-/* harmony import */ var _view_edit_point_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/edit-point.js */ "./src/view/edit-point.js");
-/* harmony import */ var _view_point_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/point.js */ "./src/view/point.js");
+/* harmony import */ var _view_events_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/events-list */ "./src/view/events-list.js");
+/* harmony import */ var _view_edit_point_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/edit-point.js */ "./src/view/edit-point.js");
+/* harmony import */ var _view_point__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/point */ "./src/view/point.js");
+/* harmony import */ var _view_board__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/board */ "./src/view/board.js");
 /* harmony import */ var _mock_task__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./mock/task */ "./src/mock/task.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const.js */ "./src/const.js");
 /* eslint-disable quotes */
 
 
@@ -154,13 +174,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const TASK_COUNT = 10;
-const tasks = new Array(TASK_COUNT).fill().map(_mock_task__WEBPACK_IMPORTED_MODULE_8__["generateTask"]);
 
+const tasks = new Array(_const_js__WEBPACK_IMPORTED_MODULE_10__["TASK_COUNT"]).fill().map(_mock_task__WEBPACK_IMPORTED_MODULE_8__["generateTask"]);
 tasks.sort(_utils_js__WEBPACK_IMPORTED_MODULE_9__["sortDate"]);
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+Object(_utils_js__WEBPACK_IMPORTED_MODULE_9__["generateTaskId"])(tasks);
 
 const sitePageBody = document.querySelector('.page-body');
 
@@ -170,20 +187,35 @@ const siteTripFilters = sitePageHeader.querySelector('.trip-controls__filters');
 const siteTripMain = sitePageHeader.querySelector('.trip-main');
 
 const siteMainElement = document.querySelector('.page-main');
-const siteTripEvents = siteMainElement.querySelector('.trip-events');
+// const siteTripEvents = siteMainElement.querySelector('.trip-events');
+// const siteTripList = siteTripEvents.querySelector('.trip-events__list');
 
-render(siteTripEvents, Object(_view_trip_sort_js__WEBPACK_IMPORTED_MODULE_0__["tripSortForm"])(), 'afterbegin');
-render(siteTripEvents, Object(_view_events_list_js__WEBPACK_IMPORTED_MODULE_4__["tripEventsList"])(), 'beforeend');
-render(siteMenuElement, Object(_view_site_menu_js__WEBPACK_IMPORTED_MODULE_1__["siteMenu"])(), 'beforeend');
-render(siteTripFilters, Object(_view_filters_js__WEBPACK_IMPORTED_MODULE_2__["filters"])(), 'beforeend');
-render(siteTripMain, Object(_view_route_and_cost__WEBPACK_IMPORTED_MODULE_3__["routeAndCost"])(), 'afterbegin');
+Object(_utils_js__WEBPACK_IMPORTED_MODULE_9__["render"])(siteMenuElement, new _view_site_menu_js__WEBPACK_IMPORTED_MODULE_1__["default"]().getElement(), _utils_js__WEBPACK_IMPORTED_MODULE_9__["RenderPosition"].BEFOREEND);
+Object(_utils_js__WEBPACK_IMPORTED_MODULE_9__["render"])(siteTripMain, new _view_route_and_cost__WEBPACK_IMPORTED_MODULE_3__["default"]().getElement(), _utils_js__WEBPACK_IMPORTED_MODULE_9__["RenderPosition"].AFTERBEGIN);
+Object(_utils_js__WEBPACK_IMPORTED_MODULE_9__["render"])(siteTripFilters, new _view_filters_js__WEBPACK_IMPORTED_MODULE_2__["default"]().getElement(), _utils_js__WEBPACK_IMPORTED_MODULE_9__["RenderPosition"].BEFOREEND);
 
-const siteTripList = siteTripEvents.querySelector('.trip-events__list');
-render(siteTripList, Object(_view_edit_point_js__WEBPACK_IMPORTED_MODULE_6__["editPointForm"])(tasks[0]), 'afterbegin');
-for (let i = 1; i < TASK_COUNT; i++) {
-  render(siteTripList, Object(_view_point_js__WEBPACK_IMPORTED_MODULE_7__["point"])(tasks[i]), 'beforeend');
-}
-const newEvent = () => render(siteTripList, Object(_view_new_point_js__WEBPACK_IMPORTED_MODULE_5__["newPointForm"])(), 'afterbegin');
+const boardComponent = new _view_board__WEBPACK_IMPORTED_MODULE_7__["default"]();
+const pointListComponent = new _view_events_list__WEBPACK_IMPORTED_MODULE_4__["default"]();
+Object(_utils_js__WEBPACK_IMPORTED_MODULE_9__["render"])(siteMainElement, boardComponent.getElement(), _utils_js__WEBPACK_IMPORTED_MODULE_9__["RenderPosition"].BEFOREEND);
+Object(_utils_js__WEBPACK_IMPORTED_MODULE_9__["render"])(boardComponent.getElement(), new _view_trip_sort_js__WEBPACK_IMPORTED_MODULE_0__["default"]().getElement(), _utils_js__WEBPACK_IMPORTED_MODULE_9__["RenderPosition"].AFTERBEGIN);
+Object(_utils_js__WEBPACK_IMPORTED_MODULE_9__["render"])(boardComponent.getElement(), pointListComponent.getElement(), _utils_js__WEBPACK_IMPORTED_MODULE_9__["RenderPosition"].BEFOREEND);
+
+// const renderTask = (taskListElement, task) => {
+//   const taskComponent = new PointView(task);
+//   const taskEditComponent = new EditPointView(task);
+
+//   render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+// };
+
+// render(
+//   boardComponent.getElement(),
+//   new EditPointView(tasks[0]).getElement(),
+//   RenderPosition.AFTERBEGIN,
+// );
+// for (let i = 1; i < TASK_COUNT; i++) {
+//   render(siteTripList, new PointView(tasks[i]).getElement(), RenderPosition.BEFOREEND);
+//   // renderTask(siteTripList.getElement(), tasks[i]);
+// }
 
 
 /***/ }),
@@ -204,237 +236,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const generatePlace = () => {
-  const r = Math.random();
-  const picturePath = `http://picsum.photos/300/200?r=${r}`;
-  const destination = [
-    {
-      name: 'Amsterdam',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
-      pictures: [
-        {
-          src: picturePath,
-          description: 'Amsterdam parliament building',
-        },
-      ],
-    },
-    {
-      name: 'Chamonix',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-      pictures: [
-        {
-          src: picturePath,
-          description: 'Chamonix parliament building',
-        },
-      ],
-    },
-    {
-      name: 'Geneva',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
-      pictures: [
-        {
-          src: picturePath,
-          description: 'Geneva parliament building',
-        },
-      ],
-    },
-  ];
-  const randomIndex = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, destination.length - 1);
-  return destination[randomIndex];
-};
-
-const generateDate = (maxDaysGap = 7, param = 'day') => {
-  const daysGap = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(-maxDaysGap, maxDaysGap);
-  return dayjs__WEBPACK_IMPORTED_MODULE_0___default()().add(daysGap, param).toDate();
-};
-const generatePoint = () => {
-  const pointsOffer = [
-    {
-      type: 'taxi',
-      offers: [
-        {
-          name: 'business',
-          title: 'Upgrade to a business class',
-          price: 120,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'radio',
-          title: 'Choose the radio station',
-          price: 60,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'uber',
-          title: 'Order Uber',
-          price: 20,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'bus',
-      offers: [
-        {
-          name: 'business',
-          title: 'Upgrade to a business class',
-          price: 120,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'radio',
-          title: 'Choose the radio station',
-          price: 60,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'train',
-      offers: [
-        {
-          name: 'business',
-          title: 'Upgrade to a business class',
-          price: 120,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'radio',
-          title: 'Choose the radio station',
-          price: 60,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'ship',
-      offers: [
-        {
-          name: 'business',
-          title: 'Upgrade to a business class',
-          price: 120,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'radio',
-          title: 'Choose the radio station',
-          price: 60,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'drive',
-      offers: [
-        {
-          name: 'business',
-          title: 'Upgrade to a business class',
-          price: 120,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-
-        {
-          name: 'rent',
-          title: 'Rent a car',
-          price: 200,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'flight',
-      offers: [
-        {
-          name: 'luggage',
-          title: 'Add luggage',
-          price: 30,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'comfort',
-          title: 'Switch to comfort',
-          price: 100,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        { name: 'meal', title: 'Add meal', price: 15, isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)) },
-        {
-          name: 'seats',
-          title: 'Choose seats',
-          price: 5,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'train',
-          title: 'Travel by train',
-          price: 40,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'check-in',
-      offers: [
-        {
-          name: 'breakfast',
-          title: 'Add breakfast',
-          price: 120,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'sightseeing',
-      offers: [
-        {
-          name: 'tickets',
-          title: 'Book tickets',
-          price: 40,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-        {
-          name: 'lunch',
-          title: 'Lunch in city ',
-          price: 30,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-    {
-      type: 'restaurant',
-      offers: [
-        {
-          name: 'lunch',
-          title: 'Lunch in city ',
-          price: 30,
-          isSelected: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
-        },
-      ],
-    },
-  ];
-  const randomIndex = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, pointsOffer.length - 1);
-  return pointsOffer[randomIndex];
-};
-
 const generateTask = () => {
-  const date = generateDate();
-  const time1 = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(date).add(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(-10, 100), 'minute').toDate();
-  const time2 = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(time1).add(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(20, 100), 'minute').toDate();
-  const begDate = time1;
-  const endDate = time2;
-  const diff = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(time2).diff(time1) / (1000 * 60);
-  const duration = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getTimeFromMins"])(diff);
-  const place = generatePlace();
+  const date = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["generateDate"])();
+  const dateFrom = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(date).add(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(-10, 100), 'minute').toDate();
+  const dateTo = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(dateFrom).add(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(20, 100), 'minute').toDate();
+  const point = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getOffer"])();
+
   return {
-    place: place.name,
-    description: place.description,
-    begDate,
-    endDate,
-    duration,
-    points: generatePoint(),
     basePrice: Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(500, 2000),
+    dateFrom,
+    dateTo,
+    destination: Object(_utils__WEBPACK_IMPORTED_MODULE_1__["generatePlace"])(),
+    id: '',
+    type: point.type,
+    offers: point.offers,
     isFavorite: Boolean(Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, 1)),
   };
 };
@@ -446,30 +261,72 @@ const generateTask = () => {
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: getRandomInteger, upperCase, sortDate, getTimeFromMins */
+/*! exports provided: RenderPosition, render, createElement, getRandomInteger, getUpperCase, sortDate, getTimeFromMins, getRandomProposal, getOffer, getPictureList, getDestination, generatePlace, generateDate, getDuration, generateTaskId */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RenderPosition", function() { return RenderPosition; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomInteger", function() { return getRandomInteger; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "upperCase", function() { return upperCase; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUpperCase", function() { return getUpperCase; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sortDate", function() { return sortDate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTimeFromMins", function() { return getTimeFromMins; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomProposal", function() { return getRandomProposal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOffer", function() { return getOffer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPictureList", function() { return getPictureList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDestination", function() { return getDestination; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generatePlace", function() { return generatePlace; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateDate", function() { return generateDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDuration", function() { return getDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateTaskId", function() { return generateTaskId; });
+/* harmony import */ var _const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const */ "./src/const.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+};
+
+const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
-const upperCase = (str) => {
+
+const getUpperCase = (str) => {
   const str1 = str[0].toUpperCase() + str.substring(1);
   return str1;
 };
+
 const sortDate = (a, b) => {
-  const date1 = new Date(a.begDate);
-  const date2 = new Date(b.begDate);
+  const date1 = new Date(a.dateFrom);
+  const date2 = new Date(b.dateFrom);
   return date1 - date2;
 };
+
 const getTimeFromMins = (mins) => {
   let hours = Math.trunc(mins / 60);
   let minutes = mins % 60;
@@ -481,6 +338,177 @@ const getTimeFromMins = (mins) => {
   return `${hours}H ${minutes}M`;
 };
 
+const getRandomProposal = (count) => {
+  const text =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
+  const substr = text.split('.');
+  const rand = getRandomInteger(1, count);
+  let description = '';
+  for (let i = 0; i <= rand; i++) {
+    description += `${substr[i]}.`;
+  }
+  return description;
+};
+
+const getOffer = () => {
+  const randomPoint = _const__WEBPACK_IMPORTED_MODULE_0__["POINTS"][getRandomInteger(0, _const__WEBPACK_IMPORTED_MODULE_0__["POINTS"].length - 1)];
+  const offers = [];
+  const count = getRandomInteger(1, _const__WEBPACK_IMPORTED_MODULE_0__["OFFERS"].length - 1);
+  const set = new Set();
+  const getRandomOffer = () => {
+    const offerIndex = getRandomInteger(1, _const__WEBPACK_IMPORTED_MODULE_0__["OFFERS"].length - 1);
+    set.add(offerIndex);
+  };
+  for (let i = 0; i < count; i++) {
+    getRandomOffer();
+  }
+  set.forEach((elem) => {
+    offers.push({
+      title: _const__WEBPACK_IMPORTED_MODULE_0__["OFFERS"][elem].title,
+      price: getRandomInteger(5, 70),
+    });
+  });
+
+  const offer = {
+    type: randomPoint,
+    offers: offers,
+  };
+  return offer;
+};
+
+const getPictureList = () => {
+  const pictures = [];
+  for (let i = 0; i < _const__WEBPACK_IMPORTED_MODULE_0__["PICTURE_COUNT"]; i++) {
+    const r = Math.random();
+    const picturePath = `http://picsum.photos/300/200?r=${r}`;
+    pictures.push({ src: picturePath, description: getRandomProposal(1) });
+  }
+  return { pictures };
+};
+
+const getDestination = () => {
+  const destination = [];
+  _const__WEBPACK_IMPORTED_MODULE_0__["PLACES"].forEach((elem) => {
+    destination.push({
+      name: elem,
+      description: getRandomProposal(5),
+      pictures: getPictureList().pictures,
+    });
+  });
+  return destination;
+};
+
+const generatePlace = () => {
+  const destination = getDestination();
+  const randomIndex = getRandomInteger(0, destination.length - 1);
+  return destination[randomIndex];
+};
+
+const generateDate = (maxDaysGap = 7, param = 'day') => {
+  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  return dayjs__WEBPACK_IMPORTED_MODULE_1___default()().add(daysGap, param).toDate();
+};
+
+const getDuration = (dateFrom, dateTo) => {
+  const diff = dayjs__WEBPACK_IMPORTED_MODULE_1___default()(dateTo).diff(dateFrom) / (1000 * 60);
+  const duration = getTimeFromMins(diff);
+  return duration;
+};
+
+const generateTaskId = (tasks) => {
+  for (let i = 0; i < tasks.length; i++) {
+    tasks[i].id = i;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/view/board.js":
+/*!***************************!*\
+  !*** ./src/view/board.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Board; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createBoardTemplate = () => {
+  `<section class="trip-events">
+<h2 class="visually-hidden">Trip events</h2>
+</section>`;
+};
+class Board {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createBoardTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/view/destination-list.js":
+/*!**************************************!*\
+  !*** ./src/view/destination-list.js ***!
+  \**************************************/
+/*! exports provided: destinationListTemplate, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "destinationListTemplate", function() { return destinationListTemplate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DestinationList; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const destination = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["getDestination"])();
+const destinationListTemplate = () => {
+  let list = '';
+  destination.forEach((elem) => {
+    list += `<option value=${elem.name}></option>`;
+  });
+  return list;
+};
+class DestinationList {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return destinationListTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
 
 /***/ }),
 
@@ -488,19 +516,26 @@ const getTimeFromMins = (mins) => {
 /*!********************************!*\
   !*** ./src/view/edit-point.js ***!
   \********************************/
-/*! exports provided: editPointForm */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editPointForm", function() { return editPointForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EditPoint; });
 /* harmony import */ var _event_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event-type */ "./src/view/event-type.js");
 /* harmony import */ var _offers_selector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./offers-selector */ "./src/view/offers-selector.js");
+/* harmony import */ var _destination_list__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./destination-list */ "./src/view/destination-list.js");
+/* harmony import */ var _photos_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./photos-container */ "./src/view/photos-container.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
 
-const editPointForm = (task = {}) => {
-  const { points, place, description, begDate, endDate, basePrice } = task;
-  const iconPath = `img/icons/${points.type}.png`;
+
+
+
+
+const createEditPointTemplate = (task) => {
+  const { basePrice, dateFrom, destination, dateTo, type } = task;
+  const iconPath = `img/icons/${type}.png`;
   return `<form class='event event--edit' action='#' method='post'>
   <header class='event__header'>
     <div class='event__type-wrapper'>
@@ -513,29 +548,28 @@ const editPointForm = (task = {}) => {
       <div class='event__type-list'>
         <fieldset class='event__type-group'>
           <legend class='visually-hidden'>Event type</legend>
-           ${Object(_event_type__WEBPACK_IMPORTED_MODULE_0__["eventType"])()}
+           ${new _event_type__WEBPACK_IMPORTED_MODULE_0__["default"]().getTemplate()}
         </fieldset>
       </div>
     </div>
 
     <div class='event__field-group  event__field-group--destination'>
       <label class='event__label  event__type-output' for='event-destination-1'>
-        ${points.type}
+        ${type}
       </label>
-      <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value=${place} list='destination-list-1'>
+      <input class='event__input  event__input--destination' id='event-destination-1'
+      type='text' name='event-destination' value=${destination.name} list='destination-list-1'>
       <datalist id='destination-list-1'>
-        <option value='Amsterdam'></option>
-        <option value='Geneva'></option>
-        <option value='Chamonix'></option>
+        ${new _destination_list__WEBPACK_IMPORTED_MODULE_2__["default"]().getElement()}
       </datalist>
     </div>
 
     <div class='event__field-group  event__field-group--time'>
       <label class='visually-hidden' for='event-start-time-1'>From</label>
-      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value=${begDate}>
+      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value=${dateFrom}>
       &mdash;
       <label class='visually-hidden' for='event-end-time-1'>To</label>
-      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value=${endDate}>
+      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value=${dateTo}>
     </div>
 
     <div class='event__field-group  event__field-group--price'>
@@ -557,17 +591,51 @@ const editPointForm = (task = {}) => {
       <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
 
       <div class='event__available-offers'>
-      ${Object(_offers_selector__WEBPACK_IMPORTED_MODULE_1__["offersSelector"])(task)}
+      ${new _offers_selector__WEBPACK_IMPORTED_MODULE_1__["default"](task).getTemplate()}
           </div>
     </section>
 
     <section class='event__section  event__section--destination'>
       <h3 class='event__section-title  event__section-title--destination'>Destination</h3>
-      <p class='event__destination-description'>${description}</p>
+      <p class='event__destination-description'>${destination.description}</p>
+      ${new _photos_container__WEBPACK_IMPORTED_MODULE_3__["default"](destination).getTemplate()}
     </section>
   </section>
 </form>`;
 };
+
+const BLANK_TASK = {
+  basePrice: 0,
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  id: '',
+  type: '',
+  offers: '',
+  isFavorite: false,
+};
+class EditPoint {
+  constructor(task = BLANK_TASK) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditPointTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_4__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -576,17 +644,19 @@ const editPointForm = (task = {}) => {
 /*!*********************************!*\
   !*** ./src/view/event-offer.js ***!
   \*********************************/
-/*! exports provided: eventOffer */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventOffer", function() { return eventOffer; });
-const eventOffer = (task) => {
-  const { points } = task;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EventOffer; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createEventOfferTemplate = (task) => {
+  const { offers } = task;
   let list = '';
-  points.offers.forEach((element) => {
-    element.isSelected
+  offers.forEach((element) => {
+    element
       ? (list += `<li class='event__offer'>
       <span class='event__offer-title'> ${element.title}</span>
       &plus;&euro;&nbsp;
@@ -596,6 +666,28 @@ const eventOffer = (task) => {
   });
   return list;
 };
+class EventOffer {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventOfferTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -604,15 +696,17 @@ const eventOffer = (task) => {
 /*!********************************!*\
   !*** ./src/view/event-type.js ***!
   \********************************/
-/*! exports provided: eventType */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventType", function() { return eventType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EventType; });
 /* harmony import */ var _const_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../const.js */ "./src/const.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
-const eventType = () => {
+
+const createEventTypeTemplate = () => {
   let list = '';
   _const_js__WEBPACK_IMPORTED_MODULE_0__["POINTS"].forEach((elem) => {
     const lowerElem = elem.toLowerCase();
@@ -621,9 +715,29 @@ const eventType = () => {
   <label class='event__type-label  event__type-label--${lowerElem}' for='event-type-${lowerElem}-1'>${elem}</label>
 </div>`;
   });
-
   return list;
 };
+class EventType{
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTypeTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -632,16 +746,39 @@ const eventType = () => {
 /*!*********************************!*\
   !*** ./src/view/events-list.js ***!
   \*********************************/
-/*! exports provided: tripEventsList */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tripEventsList", function() { return tripEventsList; });
-const tripEventsList = () =>
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EventList; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createTripEventsListTemplate = () =>
   ` <ul class='trip-events__list'>
 </ul>`;
 
+class EventList {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripEventsListTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -650,13 +787,15 @@ const tripEventsList = () =>
 /*!*****************************!*\
   !*** ./src/view/filters.js ***!
   \*****************************/
-/*! exports provided: filters */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filters", function() { return filters; });
-const filters = () => (
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Filters; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createFiltersTemplate = () =>
   `<form class='trip-filters' action='#' method='get'>
     <div class='trip-filters__filter'>
       <input id='filter-everything' class='trip-filters__filter-input  visually-hidden' type='radio' name='trip-filter' value='everything' checked>
@@ -674,143 +813,28 @@ const filters = () => (
     </div>
 
     <button class='visually-hidden' type='submit'>Accept filter</button>
-  </form>`);
-
-
-/***/ }),
-
-/***/ "./src/view/new-point.js":
-/*!*******************************!*\
-  !*** ./src/view/new-point.js ***!
-  \*******************************/
-/*! exports provided: newPointForm */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newPointForm", function() { return newPointForm; });
-/* harmony import */ var _event_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event-type */ "./src/view/event-type.js");
-
-const newPointForm = (task = {}) => {
-  const { points, place, description, begDate, endDate, basePrice } = task;
-  const iconPath = `img/icons/${points.type}.png`;
-  return `<form class='event event--edit' action='#' method='post'>
-  <header class='event__header'>
-    <div class='event__type-wrapper'>
-      <label class='event__type  event__type-btn' for='event-type-toggle-1'>
-        <span class='visually-hidden'>Choose event type</span>
-        <img class='event__type-icon' width='17' height='17' src='img/icons/flight.png' alt='Event type icon'>
-      </label>
-      <input class='event__type-toggle  visually-hidden' id='event-type-toggle-1' type='checkbox'>
-
-      <div class='event__type-list'>
-        <fieldset class='event__type-group'>
-          <legend class='visually-hidden'>Event type</legend>
-          ${Object(_event_type__WEBPACK_IMPORTED_MODULE_0__["eventType"])()}
-        </fieldset>
-      </div>
-    </div>
-
-    <div class='event__field-group  event__field-group--destination'>
-      <label class='event__label  event__type-output' for='event-destination-1'>
-        Flight
-      </label>
-      <input class='event__input  event__input--destination' id='event-destination-1' type='text' name='event-destination' value='Geneva' list='destination-list-1'>
-      <datalist id='destination-list-1'>
-        <option value='Amsterdam'></option>
-        <option value='Geneva'></option>
-        <option value='Chamonix'></option>
-      </datalist>
-    </div>
-
-    <div class='event__field-group  event__field-group--time'>
-      <label class='visually-hidden' for='event-start-time-1'>From</label>
-      <input class='event__input  event__input--time' id='event-start-time-1' type='text' name='event-start-time' value='19/03/19 00:00'>
-      &mdash;
-      <label class='visually-hidden' for='event-end-time-1'>To</label>
-      <input class='event__input  event__input--time' id='event-end-time-1' type='text' name='event-end-time' value='19/03/19 00:00'>
-    </div>
-
-    <div class='event__field-group  event__field-group--price'>
-      <label class='event__label' for='event-price-1'>
-        <span class='visually-hidden'>Price</span>
-        &euro;
-      </label>
-      <input class='event__input  event__input--price' id='event-price-1' type='text' name='event-price' value=''>
-    </div>
-
-    <button class='event__save-btn  btn  btn--blue' type='submit'>Save</button>
-    <button class='event__reset-btn' type='reset'>Cancel</button>
-  </header>
-  <section class='event__details'>
-    <section class='event__section  event__section--offers'>
-      <h3 class='event__section-title  event__section-title--offers'>Offers</h3>
-
-      <div class='event__available-offers'>
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-luggage-1' type='checkbox' name='event-offer-luggage' checked>
-          <label class='event__offer-label' for='event-offer-luggage-1'>
-            <span class='event__offer-title'>Add luggage</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>30</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-comfort-1' type='checkbox' name='event-offer-comfort' checked>
-          <label class='event__offer-label' for='event-offer-comfort-1'>
-            <span class='event__offer-title'>Switch to comfort class</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>100</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-meal-1' type='checkbox' name='event-offer-meal'>
-          <label class='event__offer-label' for='event-offer-meal-1'>
-            <span class='event__offer-title'>Add meal</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>15</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-seats-1' type='checkbox' name='event-offer-seats'>
-          <label class='event__offer-label' for='event-offer-seats-1'>
-            <span class='event__offer-title'>Choose seats</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>5</span>
-          </label>
-        </div>
-
-        <div class='event__offer-selector'>
-          <input class='event__offer-checkbox  visually-hidden' id='event-offer-train-1' type='checkbox' name='event-offer-train'>
-          <label class='event__offer-label' for='event-offer-train-1'>
-            <span class='event__offer-title'>Travel by train</span>
-            &plus;&euro;&nbsp;
-            <span class='event__offer-price'>40</span>
-          </label>
-        </div>
-      </div>
-    </section>
-
-    <section class='event__section  event__section--destination'>
-      <h3 class='event__section-title  event__section-title--destination'>Destination</h3>
-      <p class='event__destination-description'>Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
-
-      <div class='event__photos-container'>
-        <div class='event__photos-tape'>
-          <img class='event__photo' src='img/photos/1.jpg' alt='Event photo'>
-          <img class='event__photo' src='img/photos/2.jpg' alt='Event photo'>
-          <img class='event__photo' src='img/photos/3.jpg' alt='Event photo'>
-          <img class='event__photo' src='img/photos/4.jpg' alt='Event photo'>
-          <img class='event__photo' src='img/photos/5.jpg' alt='Event photo'>
-        </div>
-      </div>
-    </section>
-  </section>
   </form>`;
-};
+class Filters {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFiltersTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -819,16 +843,18 @@ const newPointForm = (task = {}) => {
 /*!*************************************!*\
   !*** ./src/view/offers-selector.js ***!
   \*************************************/
-/*! exports provided: offersSelector */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "offersSelector", function() { return offersSelector; });
-const offersSelector = (task) => {
-  const { points } = task;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return OffersSelector; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createOffersSelectorTemplate = (task) => {
+  const { offers } = task;
   let list = '';
-  points.offers.forEach((element) => {
+  offers.forEach((element) => {
     list += `<div class='event__offer-selector'>
     <input class='event__offer-checkbox  visually-hidden' id='event-offer-${element.name}-1' type=${element.name} name='event-offer-${element.name}' checked>
     <label class='event__offer-label' for='event-offer-${element.name}-1'>
@@ -840,6 +866,80 @@ const offersSelector = (task) => {
   });
   return list;
 };
+class OffersSelector {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createOffersSelectorTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/view/photos-container.js":
+/*!**************************************!*\
+  !*** ./src/view/photos-container.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return PhotosContainer; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createPhotosContainerTemplate = (place) => {
+  const { pictures } = place;
+  let list = '';
+  pictures.forEach((elem) => {
+    const src = elem.src;
+    const description = elem.description;
+    list += `<img class='event__photo' src=${src} alt=${description}>`;
+  });
+  return `<div class='event__photos-container'>
+  <div class='event__photos-tape'>
+  ${list}
+  </div>
+  </div>`;
+};
+class PhotosContainer {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPhotosContainerTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -848,12 +948,12 @@ const offersSelector = (task) => {
 /*!***************************!*\
   !*** ./src/view/point.js ***!
   \***************************/
-/*! exports provided: point */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "point", function() { return point; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Point; });
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
@@ -861,12 +961,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const point = (task) => {
-  const { place, begDate, endDate, duration, points, basePrice } = task;
-  const pointDate = begDate !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(begDate).format('MMM D') : '';
-  const beginning = begDate !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(begDate).format('HH:mm') : '';
-  const ending = endDate !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(endDate).format('HH:mm') : '';
-  const iconPath = `img/icons/${points.type}.png`;
+
+const createPointTemplate = (task) => {
+  const { basePrice, dateFrom, dateTo, destination, type } = task;
+  const pointDate = dateFrom !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(dateFrom).format('MMM D') : '';
+  const beginning = dateFrom !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(dateFrom).format('HH:mm') : '';
+  const ending = dateTo !== null ? dayjs__WEBPACK_IMPORTED_MODULE_0___default()(dateTo).format('HH:mm') : '';
+  const iconPath = `img/icons/${type}.png`;
+  const duration = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getDuration"])(dateFrom, dateTo);
+  const eventOffers = new _event_offer__WEBPACK_IMPORTED_MODULE_2__["default"](task).getTemplate();
 
   return `<li class='trip-events__item'>
   <div class='event'>
@@ -874,7 +977,7 @@ const point = (task) => {
     <div class='event__type'>
       <img class='event__type-icon' width='42' height='42' src=${iconPath} alt='Event type icon'>
     </div>
-    <h3 class='event__title'>${Object(_utils__WEBPACK_IMPORTED_MODULE_1__["upperCase"])(points.type)} ${place}</h3>
+    <h3 class='event__title'>${Object(_utils__WEBPACK_IMPORTED_MODULE_1__["getUpperCase"])(type)} ${destination.name}</h3>
     <div class='event__schedule'>
       <p class='event__time'>
         <time class='event__start-time' datetime=${beginning}>${beginning}</time>
@@ -888,7 +991,7 @@ const point = (task) => {
     </p>
     <h4 class='visually-hidden'>Offers:</h4>
     <ul class='event__selected-offers'>
-      ${Object(_event_offer__WEBPACK_IMPORTED_MODULE_2__["eventOffer"])(task)}
+      ${eventOffers}
     </ul>
     <button class='event__favorite-btn' type='button'>
       <span class='visually-hidden'>Add to favorite</span>
@@ -902,6 +1005,28 @@ const point = (task) => {
   </div>
 </li>`;
 };
+class Point {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -910,13 +1035,15 @@ const point = (task) => {
 /*!************************************!*\
   !*** ./src/view/route-and-cost.js ***!
   \************************************/
-/*! exports provided: routeAndCost */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "routeAndCost", function() { return routeAndCost; });
-const routeAndCost = () =>
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RouteAndCost; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createRouteAndCostTemplate = () =>
   `<section class='trip-main__trip-info  trip-info'>
   <div class='trip-info__main'>
     <h1 class='trip-info__title'>Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
@@ -928,6 +1055,27 @@ const routeAndCost = () =>
     Total: &euro;&nbsp;<span class='trip-info__cost-value'>1230</span>
   </p>
 </section>`;
+class RouteAndCost {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRouteAndCostTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -936,18 +1084,41 @@ const routeAndCost = () =>
 /*!*******************************!*\
   !*** ./src/view/site-menu.js ***!
   \*******************************/
-/*! exports provided: siteMenu */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "siteMenu", function() { return siteMenu; });
-const siteMenu = () => (`
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return SiteMenu; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createSiteMenuTemplate = () => `
      <nav class='trip-controls__trip-tabs  trip-tabs'>
        <a class='trip-tabs__btn  trip-tabs__btn--active' href='#'>Table</a>
        <a class='trip-tabs__btn' href='#'>Stats</a>
      </nav>
-   `);
+   `;
+class SiteMenu {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenuTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -956,13 +1127,15 @@ const siteMenu = () => (`
 /*!*******************************!*\
   !*** ./src/view/trip-sort.js ***!
   \*******************************/
-/*! exports provided: tripSortForm */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tripSortForm", function() { return tripSortForm; });
-const tripSortForm = () => (
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TripSortForm; });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+const createTripSortFormTemplate = () =>
   `<form class='trip-events__trip-sort  trip-sort' action='#' method='get'>
 <div class='trip-sort__item  trip-sort__item--day'>
   <input id='sort-day' class='trip-sort__input  visually-hidden' type='radio' name='trip-sort' value='sort-day' checked>
@@ -988,7 +1161,28 @@ const tripSortForm = () => (
   <input id='sort-offer' class='trip-sort__input  visually-hidden' type='radio' name='trip-sort' value='sort-offer' disabled>
   <label class='trip-sort__btn' for='sort-offer'>Offers</label>
 </div>
-</form>`);
+</form>`;
+class TripSortForm {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripSortFormTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createElement"])(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ })

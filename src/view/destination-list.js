@@ -1,6 +1,6 @@
 import { createElement, getDestination } from '../utils';
 const destination = getDestination();
-export const destinationListTemplate = () => {
+const destinationListTemplate = () => {
   let list = '';
   destination.forEach((elem) => {
     list += `<option value=${elem.name}></option>`;

@@ -1,5 +1,5 @@
 export const PICTURE_COUNT = 4;
-export const TASK_COUNT = 14;
+export const TASK_COUNT = 20;
 export const TASK_COUNT_PER_STEP = 8;
 export const POINTS = [
   'Taxi',
