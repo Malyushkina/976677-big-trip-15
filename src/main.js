@@ -51,7 +51,7 @@ if (tasks.every((task) => task)) {
   render(
     boardComponent.getElement(),
     new TripSortFormView().getElement(),
-    RenderPosition.BEFOREEND
+    RenderPosition.BEFOREEND,
   );
 }
 // const closeForm = () => {
