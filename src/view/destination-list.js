@@ -1,10 +1,13 @@
-import { createElement, getDestination } from '../utils';
+import { createElement } from '../utils';
+import { getDestination } from '../mock/mocks';
+
 const destination = getDestination();
 const destinationListTemplate = () => {
   let list = '';
   destination.forEach((elem) => {
     list += `<option value=${elem.name}></option>`;
   });
+
   return list;
 };
 export default class DestinationList {

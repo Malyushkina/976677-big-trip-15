@@ -9,8 +9,10 @@ import PointView from './view/point';
 import BoardView from './view/board';
 import NoPointView from './view/no-point';
 import { generateTask } from './mock/task';
-import { sortDate, generateTaskId, render, RenderPosition } from './utils.js';
-import { TASK_COUNT } from './const.js';
+import { generateTaskId } from './mock/mocks';
+import { sortDate, render, RenderPosition, isEscPressed } from './utils.js';
+import { TASK_COUNT } from './mock/mocks';
+import { BLANK_TASK } from './consts';
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 tasks.sort(sortDate);
@@ -36,15 +38,33 @@ render(siteMainContainer, boardComponent.getElement(), RenderPosition.AFTERBEGIN
 render(boardComponent.getElement(), new TripSortFormView().getElement(), RenderPosition.AFTERBEGIN);
 render(boardComponent.getElement(), pointListComponent.getElement(), RenderPosition.BEFOREEND);
 
+const hasOpenForm = () => {
+  if (pointListComponent.getElement().querySelector('.event--edit') !== null) {
+    return true;
+  } else {
+    return false;
+  }
+};
 if (tasks.every((task) => task)) {
   render(boardComponent.getElement(), new NoPointView().getElement(), RenderPosition.BEFOREEND);
 } else {
-  render(boardComponent.getElement(), new TripSortFormView().getElement(), RenderPosition.BEFOREEND);
+  render(
+    boardComponent.getElement(),
+    new TripSortFormView().getElement(),
+    RenderPosition.BEFOREEND
+  );
 }
+// const closeForm = () => {
+//   pointListComponent.getElement().childNodes.forEach((elem, i) => {
+//     (elem.nodeName.toLowerCase() !== 'li')&&(i!==0)
+//       ? renderTask(pointListComponent.getElement(), tasks[i-1])
+//       : null;
+//   });
+// };
+
 const renderTask = (taskListElement, task) => {
   const taskComponent = new PointView(task);
   const taskEditComponent = new EditPointView(task);
-
   const replaceCardToForm = () => {
     taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
   };
@@ -52,21 +72,25 @@ const renderTask = (taskListElement, task) => {
   const replaceFormToCard = () => {
     taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
   };
+
   const onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscPressed(evt)) {
       evt.preventDefault();
       replaceFormToCard();
       document.removeEventListener('keydown', onEscKeyDown);
     }
   };
+
   taskComponent
     .getElement()
     .querySelector('.event__rollup-btn')
     .addEventListener('click', () => {
+      // hasOpenForm() ? closeForm() :
       replaceCardToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
-  if (taskListElement.querySelector('.event--edit')) {
+
+  if (hasOpenForm()) {
     taskEditComponent
       .getElement()
       .querySelector('form')
@@ -76,6 +100,7 @@ const renderTask = (taskListElement, task) => {
       });
     document.removeEventListener('keydown', onEscKeyDown);
   }
+
   taskEditComponent
     .getElement()
     .querySelector('.event__rollup-btn')
@@ -83,9 +108,21 @@ const renderTask = (taskListElement, task) => {
       evt.preventDefault();
       replaceFormToCard();
     });
+
   render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+  if (task === BLANK_TASK) {
+    render(taskListElement, taskComponent.getElement(), RenderPosition.AFTERBEGIN);
+    replaceCardToForm();
+    document.addEventListener('keydown', onEscKeyDown);
+
+  }
 };
 
 for (let i = 0; i < TASK_COUNT; i++) {
   renderTask(pointListComponent.getElement(), tasks[i]);
 }
+
+const buttonNew = sitePageHeader.querySelector('.trip-main__event-add-btn');
+buttonNew.addEventListener('click', () => {
+  renderTask(pointListComponent.getElement(), BLANK_TASK);
+});
