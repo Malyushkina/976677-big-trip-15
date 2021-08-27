@@ -1,4 +1,5 @@
 import { createElement } from '../utils';
+
 const createPhotosContainerTemplate = (place) => {
   const { pictures } = place;
   let list = '';
@@ -7,11 +8,12 @@ const createPhotosContainerTemplate = (place) => {
     const description = elem.description;
     list += `<img class='event__photo' src=${src} alt=${description}>`;
   });
+
   return `<div class='event__photos-container'>
-  <div class='event__photos-tape'>
-  ${list}
-  </div>
-  </div>`;
+            <div class='event__photos-tape'>
+             ${list}
+            </div>
+          </div>`;
 };
 export default class PhotosContainer {
   constructor(task) {

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { getRandomInteger, getOffer, generateDate, generatePlace } from '../utils';
+import { getRandomInteger } from '../utils';
+import { getOffer, generatePlace, generateDate } from './mocks';
 
 export const generateTask = () => {
   const date = generateDate();
