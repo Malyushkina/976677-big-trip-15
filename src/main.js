@@ -83,23 +83,19 @@ const renderTask = (taskListElement, task) => {
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  if (task === BLANK_TASK) {
-    render(taskListElement, taskComponent.getElement(), RenderPosition.AFTERBEGIN);
-    replaceCardToForm();
-    document.addEventListener('keydown', onEscKeyDown);
-  }
+  render(taskListElement, taskComponent.getElement(), RenderPosition.AFTERBEGIN);
 
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+  if (task === BLANK_TASK) {
+    replaceCardToForm();
+  }
 };
 
 const buttonNew = sitePageHeader.querySelector('.trip-main__event-add-btn');
+
 buttonNew.addEventListener('click', () => {
   renderTask(pointListComponent.getElement(), BLANK_TASK);
 });
 
-function getInitialState() {
-  for (let i = 0; i < TASK_COUNT; i++) {
-    renderTask(pointListComponent.getElement(), tasks[i]);
-  }
+for (let i = 0; i < tasks.length; i++) {
+  renderTask(pointListComponent.getElement(), tasks[i]);
 }
-getInitialState();
