@@ -46,8 +46,7 @@ if (tasks.every((task) => task)) {
     RenderPosition.BEFOREEND
   );
 }
-
-const hasOpenForm = () => pointListComponent.getElement().querySelector('.event--edit') !== null;
+const hasOpenForm = () => pointListComponent.getElement().querySelector('form') !== null;
 
 const renderTask = (taskListElement, task) => {
   const taskComponent = new PointView(task);
@@ -68,40 +67,29 @@ const renderTask = (taskListElement, task) => {
     }
   };
 
-  taskComponent
-    .getElement()
-    .querySelector('.event__rollup-btn')
-    .addEventListener('click', () => {
-      replaceCardToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
+  taskComponent.setEditClickHandler(() => {
+    replaceCardToForm();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
 
   if (hasOpenForm()) {
-    taskEditComponent
-      .getElement()
-      .querySelector('form')
-      .addEventListener('submit', (evt) => {
-        evt.preventDefault();
-        replaceFormToCard();
-      });
-    document.removeEventListener('keydown', onEscKeyDown);
-  }
-
-  taskEditComponent
-    .getElement()
-    .querySelector('.event__rollup-btn')
-    .addEventListener('click', (evt) => {
-      evt.preventDefault();
+    taskEditComponent.setFormSubmitHandler(() => {
       replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
     });
+  }
+  taskEditComponent.setEditClickHandler(() => {
+    replaceFormToCard();
+    document.removeEventListener('keydown', onEscKeyDown);
+  });
 
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
-
-  if (!task) {
+  if (task === BLANK_TASK) {
     render(taskListElement, taskComponent.getElement(), RenderPosition.AFTERBEGIN);
     replaceCardToForm();
     document.addEventListener('keydown', onEscKeyDown);
   }
+
+  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
 const buttonNew = sitePageHeader.querySelector('.trip-main__event-add-btn');
