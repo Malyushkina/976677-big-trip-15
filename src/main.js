@@ -4,7 +4,7 @@ import SiteMenuView from './view/site-menu.js';
 import FiltersView from './view/filters.js';
 import RouteAndCostView from './view/route-and-cost';
 import EventListView from './view/events-list';
-import EditPointView from './view/edit-point.js';
+import EditPointView, { BLANK_TASK } from './view/edit-point.js';
 import PointView from './view/point';
 import BoardView from './view/board';
 import NoPointView from './view/no-point';
@@ -12,7 +12,6 @@ import { generateTask } from './mock/task';
 import { generateTaskId } from './mock/mocks';
 import { sortDate, render, RenderPosition, isEscPressed } from './utils.js';
 import { TASK_COUNT } from './mock/mocks';
-import { BLANK_TASK } from './consts';
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 tasks.sort(sortDate);
@@ -38,29 +37,17 @@ render(siteMainContainer, boardComponent.getElement(), RenderPosition.AFTERBEGIN
 render(boardComponent.getElement(), new TripSortFormView().getElement(), RenderPosition.AFTERBEGIN);
 render(boardComponent.getElement(), pointListComponent.getElement(), RenderPosition.BEFOREEND);
 
-const hasOpenForm = () => {
-  if (pointListComponent.getElement().querySelector('.event--edit') !== null) {
-    return true;
-  } else {
-    return false;
-  }
-};
 if (tasks.every((task) => task)) {
   render(boardComponent.getElement(), new NoPointView().getElement(), RenderPosition.BEFOREEND);
 } else {
   render(
     boardComponent.getElement(),
     new TripSortFormView().getElement(),
-    RenderPosition.BEFOREEND,
+    RenderPosition.BEFOREEND
   );
 }
-// const closeForm = () => {
-//   pointListComponent.getElement().childNodes.forEach((elem, i) => {
-//     (elem.nodeName.toLowerCase() !== 'li')&&(i!==0)
-//       ? renderTask(pointListComponent.getElement(), tasks[i-1])
-//       : null;
-//   });
-// };
+
+const hasOpenForm = () => pointListComponent.getElement().querySelector('.event--edit') !== null;
 
 const renderTask = (taskListElement, task) => {
   const taskComponent = new PointView(task);
@@ -85,7 +72,6 @@ const renderTask = (taskListElement, task) => {
     .getElement()
     .querySelector('.event__rollup-btn')
     .addEventListener('click', () => {
-      // hasOpenForm() ? closeForm() :
       replaceCardToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
@@ -110,19 +96,22 @@ const renderTask = (taskListElement, task) => {
     });
 
   render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
-  if (task === BLANK_TASK) {
+
+  if (!task) {
     render(taskListElement, taskComponent.getElement(), RenderPosition.AFTERBEGIN);
     replaceCardToForm();
     document.addEventListener('keydown', onEscKeyDown);
-
   }
 };
-
-for (let i = 0; i < TASK_COUNT; i++) {
-  renderTask(pointListComponent.getElement(), tasks[i]);
-}
 
 const buttonNew = sitePageHeader.querySelector('.trip-main__event-add-btn');
 buttonNew.addEventListener('click', () => {
   renderTask(pointListComponent.getElement(), BLANK_TASK);
 });
+
+function getInitialState() {
+  for (let i = 0; i < TASK_COUNT; i++) {
+    renderTask(pointListComponent.getElement(), tasks[i]);
+  }
+}
+getInitialState();
