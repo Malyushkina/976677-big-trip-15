@@ -1,5 +1,5 @@
 import { POINTS } from '../consts';
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 const createEventTypeTemplate = () => {
   let list = '';
@@ -13,24 +13,8 @@ const createEventTypeTemplate = () => {
 
   return list;
 };
-export default class EventType {
-  constructor() {
-    this._element = null;
-  }
-
+export default class EventType extends AbstractView {
   getTemplate() {
     return createEventTypeTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

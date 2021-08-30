@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 const createRouteAndCostTemplate = () =>
   `<section class='trip-main__trip-info  trip-info'>
@@ -10,24 +10,8 @@ const createRouteAndCostTemplate = () =>
         Total: &euro;&nbsp;<span class='trip-info__cost-value'>1230</span>
      </p>
    </section>`;
-export default class RouteAndCost {
-  constructor() {
-    this._element = null;
-  }
-
+export default class RouteAndCost extends AbstractView {
   getTemplate() {
     return createRouteAndCostTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

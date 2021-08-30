@@ -1,5 +1,5 @@
-import { createElement } from '../utils';
 import { getDestination } from '../mock/mocks';
+import AbstractView from './abstract';
 
 const destination = getDestination();
 const destinationListTemplate = () => {
@@ -10,24 +10,8 @@ const destinationListTemplate = () => {
 
   return list;
 };
-export default class DestinationList {
-  constructor() {
-    this._element = null;
-  }
-
+export default class DestinationList extends AbstractView {
   getTemplate() {
     return destinationListTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

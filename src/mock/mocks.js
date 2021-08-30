@@ -3,7 +3,7 @@ import { getRandomInteger } from '../utils';
 import dayjs from 'dayjs';
 
 export const PICTURE_COUNT = 4;
-export const TASK_COUNT = 0;
+export const TASK_COUNT = 20;
 
 export const OFFERS = [
   { name: 'business', title: 'Upgrade to a business class' },
