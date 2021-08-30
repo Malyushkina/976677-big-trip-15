@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 const createEventOfferTemplate = (task) => {
   const { offers } = task;
@@ -15,25 +15,13 @@ const createEventOfferTemplate = (task) => {
 
   return list;
 };
-export default class EventOffer {
+export default class EventOffer extends AbstractView {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventOfferTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

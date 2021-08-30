@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import { getUpperCase, getDuration, createElement } from '../utils';
+import { getUpperCase, getDuration } from '../utils';
 import EventOfferView from './event-offer';
+import AbstractView from './abstract';
 
 const createPointTemplate = (task) => {
   const { basePrice, dateFrom, dateTo, destination, type } = task;
@@ -45,25 +46,13 @@ const createPointTemplate = (task) => {
             </div>
           </li>`;
 };
-export default class Point {
+export default class Point extends AbstractView {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createPointTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 const createPhotosContainerTemplate = (place) => {
   const { pictures } = place;
@@ -15,25 +15,13 @@ const createPhotosContainerTemplate = (place) => {
             </div>
           </div>`;
 };
-export default class PhotosContainer {
+export default class PhotosContainer extends AbstractView {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createPhotosContainerTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

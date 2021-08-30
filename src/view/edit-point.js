@@ -2,7 +2,7 @@ import EventTypeView from './event-type';
 import OffersSelectorView from './offers-selector';
 import DestinationListView from './destination-list';
 import PhotosContainerView from './photos-container';
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 export const BLANK_TASK = {
   basePrice: 0,
@@ -114,25 +114,13 @@ const createEditPointTemplate = (task) => {
            </section>
          </form>`;
 };
-export default class EditPoint {
+export default class EditPoint extends AbstractView {
   constructor(task = BLANK_TASK) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createEditPointTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
