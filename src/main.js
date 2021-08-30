@@ -10,7 +10,8 @@ import BoardView from './view/board';
 import NoPointView from './view/no-point';
 import { generateTask } from './mock/task';
 import { generateTaskId } from './mock/mocks';
-import { sortDate, render, RenderPosition, isEscPressed } from './utils.js';
+import { isEscPressed } from './utils/task.js';
+import { render, RenderPosition, sortDate } from './utils/render.js';
 import { TASK_COUNT } from './mock/mocks';
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);

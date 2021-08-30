@@ -1,9 +1,9 @@
 import { POINTS } from '../consts';
-import { getRandomInteger } from '../utils';
+import { getRandomInteger } from '../utils/common';
 import dayjs from 'dayjs';
 
 export const PICTURE_COUNT = 4;
-export const TASK_COUNT = 0;
+export const TASK_COUNT = 15;
 
 export const OFFERS = [
   { name: 'business', title: 'Upgrade to a business class' },

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { getUpperCase, getDuration } from '../utils';
+import { getDuration } from '../utils/task';
+import { getUpperCase } from '../utils/common';
 import EventOfferView from './event-offer';
 import AbstractView from './abstract';
 
